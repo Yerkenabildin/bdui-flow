@@ -275,7 +275,7 @@ export default function PlaybackControls() {
       <div className="flex items-center gap-3">
         <span className="text-sm text-gray-500">Speed:</span>
         <div className="flex gap-1">
-          {[0.5, 1, 1.5, 2].map((s) => (
+          {[0.25, 0.5, 1, 2].map((s) => (
             <button
               key={s}
               onClick={() => setSpeed(s)}

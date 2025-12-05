@@ -25,7 +25,7 @@ export const scenarios: Scenario[] = [
 
 ПАТТЕРН: Service Discovery — автоматическое определение адреса сервиса.
 Geo-DNS позволяет направлять пользователей в ближайший ДЦ.`,
-        duration: 600,
+        duration: 4800,
         realLatency: 25,
         payload: { query: 'api.store.com', type: 'A', clientIP: '203.0.113.50' },
       },
@@ -47,7 +47,7 @@ Geo-DNS позволяет направлять пользователей в б
 
 ПАТТЕРН: Anycast — один IP адрес анонсируется из множества локаций.
 Снижает latency на 50-200ms за счёт географической близости.`,
-        duration: 400,
+        duration: 3200,
         realLatency: 5,
         payload: { ip: '104.16.123.96', ttl: 300, location: 'Frankfurt Edge' },
       },
@@ -69,7 +69,7 @@ Geo-DNS позволяет направлять пользователей в б
 
 ПАТТЕРН: Edge Computing — обработка ближе к пользователю.
 WAF (Web Application Firewall) фильтрует вредоносные запросы.`,
-        duration: 500,
+        duration: 4000,
         realLatency: 8,
         payload: { method: 'POST', path: '/api/v1/orders', headers: { 'CF-Ray': '8a1b2c3d', 'CF-IPCountry': 'DE' } },
       },
@@ -89,7 +89,7 @@ WAF (Web Application Firewall) фильтрует вредоносные зап�
 3. GLB выберет оптимальный датацентр
 
 ПАТТЕРН: CDN как reverse proxy для динамических запросов.`,
-        duration: 300,
+        duration: 2400,
         realLatency: 3,
         payload: { cached: false, forwarded: true },
       },
@@ -111,7 +111,7 @@ WAF (Web Application Firewall) фильтрует вредоносные зап�
 
 ПАТТЕРН: Global Load Balancing — распределение между регионами.
 Active-Active — все ДЦ обслуживают трафик (vs Active-Passive).`,
-        duration: 300,
+        duration: 2400,
         realLatency: 2,
         payload: { selectedDC: 'eu-central-1', reason: 'lowest_latency', latency: '12ms', health: 'healthy' },
       },
@@ -132,7 +132,7 @@ Active-Active — все ДЦ обслуживают трафик (vs Active-Pas
 
 ПАТТЕРН: Perimeter Security — защита на границе сети.
 DMZ (Demilitarized Zone) — буферная зона между интернетом и внутренней сетью.`,
-        duration: 100,
+        duration: 800,
         realLatency: 1,
       },
       {
@@ -153,7 +153,7 @@ DMZ (Demilitarized Zone) — буферная зона между интерне
 
 ПАТТЕРН: L7 Load Balancing — балансировка на уровне HTTP.
 Sticky Sessions не используются — stateless архитектура.`,
-        duration: 150,
+        duration: 1200,
         realLatency: 2,
         payload: { algorithm: 'least_connections', targetInstance: 'api-gw-03', activeConnections: 127 },
       },
@@ -179,7 +179,7 @@ Sticky Sessions не используются — stateless архитектур
 
 ПАТТЕРН: Token-based Authentication — stateless аутентификация.
 В BigTech 99% запросов валидируются локально без похода в Auth Service.`,
-        duration: 50,
+        duration: 400,
         realLatency: 1,
         payload: { token: 'eyJhbGciOiJSUzI1NiIs...', localChecks: ['signature', 'expiration', 'issuer'] },
       },
@@ -200,7 +200,7 @@ Sticky Sessions не используются — stateless архитектур
 
 ПАТТЕРН: Token Blacklisting — единственный способ отзыва JWT.
 Redis Set с TTL = max token lifetime (обычно 24h).`,
-        duration: 30,
+        duration: 240,
         realLatency: 0.5,
         payload: { operation: 'SISMEMBER', key: 'blacklist:tokens', jti: 'abc123-xyz789' },
       },
@@ -221,7 +221,7 @@ Redis Set с TTL = max token lifetime (обычно 24h).`,
 3. Токен валиден — можно продолжать
 
 РЕЗУЛЬТАТ: Аутентификация завершена.`,
-        duration: 20,
+        duration: 160,
         realLatency: 0.1,
         payload: { inBlacklist: false, responseTime: '0.1ms' },
       },
@@ -243,7 +243,7 @@ Redis Set с TTL = max token lifetime (обычно 24h).`,
 
 ПАТТЕРН: Claims-based Identity — все данные в токене.
 Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`,
-        duration: 30,
+        duration: 240,
         realLatency: 1,
         payload: { userId: 'user_123', permissions: ['orders:create', 'orders:read'] },
       },
@@ -266,7 +266,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 4. Лимиты: 100 req/min для обычных пользователей
 
 ПАТТЕРН: Distributed Rate Limiting — единый счётчик для всех инстансов.`,
-        duration: 50,
+        duration: 400,
         realLatency: 1,
         payload: { userId: 'user_123', endpoint: '/api/v1/orders', currentRate: 45, limit: 100 },
       },
@@ -286,7 +286,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 3. Если счётчик > limit → возврат 429 Too Many Requests
 
 ПАТТЕРН: Sliding Window Rate Limiting в Redis.`,
-        duration: 30,
+        duration: 240,
         realLatency: 0.5,
         payload: { key: 'rate:user_123:orders', operation: 'INCR', ttl: 60 },
       },
@@ -307,7 +307,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 3. Добавляются headers: X-RateLimit-Remaining: 54
 
 РЕЗУЛЬТАТ: Запрос прошёл rate limiting.`,
-        duration: 20,
+        duration: 160,
         realLatency: 0.1,
         payload: { allowed: true, current: 46, limit: 100, remaining: 54 },
       },
@@ -328,7 +328,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 3. Запрос продолжает путь в Kubernetes
 
 ПАТТЕРН: API Gateway как Policy Enforcement Point.`,
-        duration: 20,
+        duration: 160,
         realLatency: 0.5,
         payload: { status: 'allowed' },
       },
@@ -350,7 +350,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 3. Проксирует в K8s Ingress Controller
 
 ПАТТЕРН: API Gateway Pattern — единая точка входа.`,
-        duration: 150,
+        duration: 1200,
         realLatency: 2,
         payload: { targetService: 'order-service', headers: { 'X-User-Id': 'user_123', 'X-Trace-Id': 'trace_abc123' } },
       },
@@ -370,7 +370,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 3. Направляет на ClusterIP Service
 
 ПАТТЕРН: Ingress Controller — внешний доступ к сервисам K8s.`,
-        duration: 100,
+        duration: 800,
         realLatency: 1,
         payload: { ingressRule: 'orders-ingress', path: '/api/v1/orders', targetPort: 8080 },
       },
@@ -390,7 +390,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 3. Проверяет readiness probe — Pod должен быть Ready
 
 ПАТТЕРН: Service Discovery внутри K8s.`,
-        duration: 50,
+        duration: 400,
         realLatency: 0.5,
         payload: { selectedPod: 'order-pod-7b4f9-x2k4n', replicas: 3, readyReplicas: 3 },
       },
@@ -414,7 +414,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 
 ПАТТЕРН: SAGA Pattern начинается — это первый шаг.
 Статус PENDING — заказ создан, но не подтверждён.`,
-        duration: 200,
+        duration: 1600,
         realLatency: 25,
         payload: { orderId: 'order_789', status: 'PENDING', items: [{ productId: 'prod_456', qty: 2, price: 49.99 }], total: 99.98 },
       },
@@ -436,7 +436,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 4. Возвращает подтверждение с orderId
 
 ПАТТЕРН: ACID транзакция.`,
-        duration: 150,
+        duration: 1200,
         realLatency: 20,
         payload: { success: true, orderId: 'order_789', createdAt: '2024-01-15T10:30:00Z' },
       },
@@ -459,7 +459,7 @@ Zero Trust: внутри mesh сервисы проверяют mTLS + headers.`
 
 ПАТТЕРН: Event-Driven Architecture — коммуникация через события.
 SAGA Choreography — сервисы подписаны на нужные topics.`,
-        duration: 100,
+        duration: 800,
         realLatency: 5,
         payload: { topic: 'orders.created', key: 'order_789', partition: 3 },
       },
@@ -482,7 +482,7 @@ SAGA Choreography — сервисы подписаны на нужные topics
 3. Idempotency key (orderId) предотвращает дублирование
 
 ПАТТЕРН: Consumer Group — параллельная обработка партиций.`,
-        duration: 150,
+        duration: 1200,
         realLatency: 10,
         payload: { consumerGroup: 'inventory-orders-consumer', topic: 'orders.created' },
       },
@@ -503,7 +503,7 @@ SAGA Choreography — сервисы подписаны на нужные topics
 
 ПАТТЕРН: Pessimistic Locking — блокировка на время операции.
 Reservation Pattern — резервирование ресурса до подтверждения.`,
-        duration: 200,
+        duration: 1600,
         realLatency: 30,
         payload: { productId: 'prod_456', requestedQty: 2, action: 'reserve' },
       },
@@ -524,7 +524,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. reserved_qty увеличен на 2
 
 РЕЗУЛЬТАТ: Товар заблокирован для этого заказа.`,
-        duration: 100,
+        duration: 800,
         realLatency: 15,
         payload: { reserved: true, productId: 'prod_456', newAvailable: 48 },
       },
@@ -544,7 +544,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. Correlation ID (orderId) связывает все события SAGA
 
 ПАТТЕРН: Domain Events — inventory.reserved, inventory.released.`,
-        duration: 100,
+        duration: 800,
         realLatency: 5,
         payload: { topic: 'inventory.reserved', key: 'order_789' },
       },
@@ -567,7 +567,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. Payment Service начинает процесс оплаты
 
 ПАТТЕРН: SAGA продолжается — inventory OK, теперь payment.`,
-        duration: 150,
+        duration: 1200,
         realLatency: 10,
         payload: { consumerGroup: 'payment-inventory-consumer', topic: 'inventory.reserved', amountToPay: 99.98 },
       },
@@ -587,7 +587,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. Только после записи — вызов Stripe API
 
 ПАТТЕРН: Write-Ahead Logging для платежей.`,
-        duration: 100,
+        duration: 800,
         realLatency: 15,
         payload: { orderId: 'order_789', amount: 99.98, status: 'PENDING' },
       },
@@ -608,7 +608,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. UPDATE transactions SET stripe_id, status='AUTHORIZED'
 
 ПАТТЕРН: External Service Integration.`,
-        duration: 500,
+        duration: 4000,
         realLatency: 350,
         payload: { stripeTransactionId: 'pi_3abc123', status: 'AUTHORIZED' },
       },
@@ -628,7 +628,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. Публикуем событие в topic: payments.completed
 
 ПАТТЕРН: Transactional Outbox — сначала БД, потом событие.`,
-        duration: 100,
+        duration: 800,
         realLatency: 5,
         payload: { topic: 'payments.completed', key: 'order_789', amount: 99.98 },
       },
@@ -651,7 +651,7 @@ Reservation Pattern — резервирование ресурса до под�
 3. Статус меняется на CONFIRMED
 
 ПАТТЕРН: SAGA Completion — все participants подтвердили.`,
-        duration: 100,
+        duration: 800,
         realLatency: 10,
         payload: { consumerGroup: 'order-payments-consumer', topic: 'payments.completed' },
       },
@@ -672,14 +672,35 @@ Reservation Pattern — резервирование ресурса до под�
 
 ПАТТЕРН: State Machine — PENDING → CONFIRMED.
 SAGA успешно завершена!`,
-        duration: 150,
+        duration: 1200,
         realLatency: 20,
         payload: { orderId: 'order_789', newStatus: 'CONFIRMED' },
+      },
+      {
+        id: 'step-32',
+        fromNode: 'dc-eu-order-db',
+        toNode: 'dc-eu-order-pod',
+        edgeId: 'e-dc-eu-order-pod-db',
+        reverse: true,
+        type: 'response',
+        title: 'Order Status Updated',
+        description: 'PostgreSQL подтверждает обновление статуса',
+        detailedInfo: `ЗАЧЕМ: Подтвердить что статус заказа изменён.
+
+ЧТО ПРОИСХОДИТ:
+1. UPDATE завершён успешно (1 row affected)
+2. Транзакция закоммичена
+3. Order Service готов формировать response
+
+РЕЗУЛЬТАТ: Заказ в статусе CONFIRMED.`,
+        duration: 400,
+        realLatency: 5,
+        payload: { rowsAffected: 1, newStatus: 'CONFIRMED' },
       },
 
       // ========== INTER-SERVICE CALL ==========
       {
-        id: 'step-32',
+        id: 'step-33',
         fromNode: 'dc-eu-order-pod',
         toNode: 'dc-eu-user-pod',
         edgeId: 'e-dc-eu-order-user-mesh',
@@ -695,12 +716,12 @@ SAGA успешно завершена!`,
 4. Circuit Breaker защищает от каскадных отказов
 
 ПАТТЕРН: Service Mesh — Pod-to-Pod через sidecar proxies.`,
-        duration: 80,
+        duration: 640,
         realLatency: 3,
         payload: { protocol: 'gRPC', method: 'GetUser', mtls: true },
       },
       {
-        id: 'step-33',
+        id: 'step-34',
         fromNode: 'dc-eu-user-pod',
         toNode: 'dc-eu-cache',
         edgeId: 'e-dc-eu-user-pod-cache',
@@ -714,12 +735,12 @@ SAGA успешно завершена!`,
 2. TTL: 1 час — баланс между свежестью и нагрузкой на БД
 
 ПАТТЕРН: Cache-Aside (Lazy Loading).`,
-        duration: 50,
+        duration: 400,
         realLatency: 0.5,
         payload: { key: 'v1:user:user_123', operation: 'GET' },
       },
       {
-        id: 'step-34',
+        id: 'step-35',
         fromNode: 'dc-eu-cache',
         toNode: 'dc-eu-user-pod',
         edgeId: 'e-dc-eu-user-pod-cache',
@@ -735,12 +756,12 @@ SAGA успешно завершена!`,
 3. Ответ готов за ~2ms (vs ~50ms из БД)
 
 ПАТТЕРН: Cache-Aside — кэш прогрет.`,
-        duration: 10,
+        duration: 80,
         realLatency: 0.5,
         payload: { hit: true, userId: 'user_123', email: 'john@example.com' },
       },
       {
-        id: 'step-35',
+        id: 'step-36',
         fromNode: 'dc-eu-user-pod',
         toNode: 'dc-eu-order-pod',
         edgeId: 'e-dc-eu-order-user-mesh',
@@ -756,14 +777,14 @@ SAGA успешно завершена!`,
 3. Order Service может отправить email уведомление
 
 РЕЗУЛЬТАТ: User данные получены за ~5ms (cache hit).`,
-        duration: 50,
+        duration: 400,
         realLatency: 2,
         payload: { email: 'john@example.com', name: 'John Doe' },
       },
 
       // ========== RESPONSE TO CLIENT (обратный путь) ==========
       {
-        id: 'step-36',
+        id: 'step-37',
         fromNode: 'dc-eu-order-pod',
         toNode: 'dc-eu-order-svc',
         edgeId: 'e-dc-eu-order-svc-pod',
@@ -779,12 +800,12 @@ SAGA успешно завершена!`,
 3. Response идёт на K8s Service endpoint
 
 ПАТТЕРН: Response проходит тот же путь что и request.`,
-        duration: 30,
+        duration: 240,
         realLatency: 0.5,
         payload: { orderId: 'order_789', status: 'CONFIRMED', responseCode: 201 },
       },
       {
-        id: 'step-37',
+        id: 'step-38',
         fromNode: 'dc-eu-order-svc',
         toNode: 'dc-eu-ingress',
         edgeId: 'e-dc-eu-ingress-order-svc',
@@ -800,12 +821,12 @@ SAGA успешно завершена!`,
 3. Передаёт на API Gateway
 
 ПАТТЕРН: Observability на каждом уровне.`,
-        duration: 20,
+        duration: 160,
         realLatency: 0.5,
         payload: { upstreamResponseTime: '1.2s', statusCode: 201 },
       },
       {
-        id: 'step-38',
+        id: 'step-39',
         fromNode: 'dc-eu-ingress',
         toNode: 'dc-eu-gw',
         edgeId: 'e-dc-eu-gw-ingress',
@@ -821,12 +842,12 @@ SAGA успешно завершена!`,
 3. Rate limit headers: X-RateLimit-Remaining
 
 ПАТТЕРН: Response Enrichment.`,
-        duration: 30,
+        duration: 240,
         realLatency: 1,
         payload: { headers: { 'X-Request-Id': 'req_abc123', 'X-Response-Time': '1.3s' } },
       },
       {
-        id: 'step-39',
+        id: 'step-40',
         fromNode: 'dc-eu-gw',
         toNode: 'dc-eu-lb',
         edgeId: 'e-dc-eu-lb-gw',
@@ -842,12 +863,12 @@ SAGA успешно завершена!`,
 3. Передаёт на DC border
 
 ПАТТЕРН: Health monitoring через response codes.`,
-        duration: 20,
+        duration: 160,
         realLatency: 0.5,
         payload: { backendResponseTime: '1.35s' },
       },
       {
-        id: 'step-40',
+        id: 'step-41',
         fromNode: 'dc-eu-lb',
         toNode: 'dc-eu',
         edgeId: 'e-dc-eu-lb',
@@ -862,12 +883,12 @@ SAGA успешно завершена!`,
 2. Border router маршрутизирует наружу
 
 ПАТТЕРН: Network boundary — выход из private network.`,
-        duration: 10,
+        duration: 80,
         realLatency: 0.5,
         payload: { direction: 'egress' },
       },
       {
-        id: 'step-41',
+        id: 'step-42',
         fromNode: 'dc-eu',
         toNode: 'global-lb',
         edgeId: 'e-global-lb-dc-eu',
@@ -883,12 +904,12 @@ SAGA успешно завершена!`,
 3. Передаёт response дальше к CDN
 
 ПАТТЕРН: Response metrics для адаптивной балансировки.`,
-        duration: 20,
+        duration: 160,
         realLatency: 1,
         payload: { dcResponseTime: '1.4s', dcHealth: 'healthy' },
       },
       {
-        id: 'step-42',
+        id: 'step-43',
         fromNode: 'global-lb',
         toNode: 'cdn',
         edgeId: 'e-cdn-global-lb',
@@ -904,12 +925,12 @@ SAGA успешно завершена!`,
 3. Сжимает response (gzip/brotli)
 
 ПАТТЕРН: Edge optimization.`,
-        duration: 50,
+        duration: 400,
         realLatency: 3,
         payload: { cached: false, compressed: true },
       },
       {
-        id: 'step-43',
+        id: 'step-44',
         fromNode: 'cdn',
         toNode: 'client',
         edgeId: 'e-client-cdn',
@@ -931,7 +952,7 @@ SAGA успешно завершена!`,
 • API Gateway • JWT Auth • Rate Limiting
 • SAGA • Event Sourcing • Cache-Aside
 • Service Mesh • Multi-DC Architecture`,
-        duration: 100,
+        duration: 800,
         realLatency: 10,
         payload: {
           orderId: 'order_789',
@@ -943,7 +964,7 @@ SAGA успешно завершена!`,
 
       // ========== CROSS-DC REPLICATION ==========
       {
-        id: 'step-44',
+        id: 'step-45',
         fromNode: 'dc-eu-kafka',
         toNode: 'cross-dc-kafka',
         edgeId: 'e-dc-eu-kafka-crossdc',
@@ -959,51 +980,91 @@ SAGA успешно завершена!`,
 
 ПАТТЕРН: Multi-Region Replication — geo-distributed система.
 Eventual Consistency между регионами (~100ms lag).`,
-        duration: 300,
+        duration: 2400,
         realLatency: 80,
         payload: { replication: 'async', sourceCluster: 'eu-kafka', targetClusters: ['us-kafka', 'asia-kafka'] },
       },
       {
-        id: 'step-45',
+        id: 'step-46',
         fromNode: 'cross-dc-kafka',
-        toNode: 'dc-us-db',
-        edgeId: 'e-crossdc-us',
+        toNode: 'dc-us-cdc',
+        edgeId: 'e-crossdc-us-cdc',
         type: 'async',
-        title: 'Replication → US DB',
-        description: 'События применяются к US Read Replica',
-        detailedInfo: `ЗАЧЕМ: Read replicas в других регионах для низкой latency чтения.
+        title: 'US CDC Consumer receives event',
+        description: 'CDC Consumer в US DC получает событие из Kafka',
+        detailedInfo: `ЗАЧЕМ: Обработать событие и применить изменения к локальной БД.
 
 ЧТО ПРОИСХОДИТ:
-1. Consumer в US DC читает события из Cross-DC Kafka
-2. Применяет изменения к локальной Read Replica
+1. CDC Consumer (Debezium) подписан на cross-dc topic
+2. Получает OrderCreated/OrderUpdated событие
+3. Десериализует и валидирует по схеме
+
+ПАТТЕРН: Change Data Capture — захват изменений данных.`,
+        duration: 1600,
+        realLatency: 50,
+        payload: { consumer: 'us-cdc-consumer', topic: 'cross-dc.orders' },
+      },
+      {
+        id: 'step-47',
+        fromNode: 'dc-us-cdc',
+        toNode: 'dc-us-db',
+        edgeId: 'e-us-cdc-db',
+        type: 'async',
+        title: 'CDC → US Read Replica',
+        description: 'CDC Consumer применяет изменения к БД',
+        detailedInfo: `ЗАЧЕМ: Синхронизировать данные в US регионе.
+
+ЧТО ПРОИСХОДИТ:
+1. CDC Consumer формирует SQL: INSERT/UPDATE
+2. Применяет к локальной Read Replica
 3. US пользователи видят данные с ~100ms задержкой
 
 ПАТТЕРН: Event-Driven Replication.
 Eventual Consistency — данные появятся через ~100ms.`,
-        duration: 400,
-        realLatency: 100,
-        payload: { targetRegion: 'us-east-1', lag: '~100ms' },
+        duration: 1600,
+        realLatency: 50,
+        payload: { targetRegion: 'us-east-1', totalLag: '~100ms' },
       },
       {
-        id: 'step-46',
+        id: 'step-48',
         fromNode: 'cross-dc-kafka',
-        toNode: 'dc-asia-db',
-        edgeId: 'e-crossdc-asia',
+        toNode: 'dc-asia-cdc',
+        edgeId: 'e-crossdc-asia-cdc',
         type: 'async',
-        title: 'Replication → Asia DB',
-        description: 'События применяются к Asia Read Replica',
-        detailedInfo: `ЗАЧЕМ: Локальные read replicas для пользователей в Азии.
+        title: 'Asia CDC Consumer receives event',
+        description: 'CDC Consumer в Asia DC получает событие из Kafka',
+        detailedInfo: `ЗАЧЕМ: Обработать событие и применить изменения к локальной БД.
 
 ЧТО ПРОИСХОДИТ:
-1. Consumer в Asia DC читает события из Cross-DC Kafka
-2. Больше lag из-за географического расстояния
+1. CDC Consumer (Debezium) подписан на cross-dc topic
+2. Больше network latency из-за расстояния (~150ms)
+3. Получает то же событие что и US
+
+ПАТТЕРН: Geo-Distributed Event Processing.`,
+        duration: 2400,
+        realLatency: 150,
+        payload: { consumer: 'asia-cdc-consumer', topic: 'cross-dc.orders', networkLatency: '~150ms' },
+      },
+      {
+        id: 'step-49',
+        fromNode: 'dc-asia-cdc',
+        toNode: 'dc-asia-db',
+        edgeId: 'e-asia-cdc-db',
+        type: 'async',
+        title: 'CDC → Asia Read Replica',
+        description: 'CDC Consumer применяет изменения к БД',
+        detailedInfo: `ЗАЧЕМ: Синхронизировать данные в Asia регионе.
+
+ЧТО ПРОИСХОДИТ:
+1. CDC Consumer формирует SQL: INSERT/UPDATE
+2. Применяет к локальной Read Replica
 3. Asia пользователи видят данные с ~200ms задержкой
 
 ПАТТЕРН: Geo-Distributed Database.
 Trade-off: consistency vs latency.`,
-        duration: 500,
-        realLatency: 200,
-        payload: { targetRegion: 'ap-southeast-1', lag: '~200ms', distance: '~10000km' },
+        duration: 1600,
+        realLatency: 50,
+        payload: { targetRegion: 'ap-southeast-1', totalLag: '~200ms', distance: '~10000km' },
       },
     ],
   },

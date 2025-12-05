@@ -48,7 +48,7 @@ interface AnimationStore {
 export const useAnimationStore = create<AnimationStore>((set) => ({
   playbackState: 'idle',
   currentStepIndex: 0,
-  speed: 1,
+  speed: 0.5,
   activeEdgeId: null,
   activeNodeIds: [],
   particleProgress: 0,

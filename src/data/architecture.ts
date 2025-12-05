@@ -22,7 +22,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dns',
     type: 'dns',
-    position: { x: 250, y: 600 },
+    position: { x: 250, y: 500 },
     data: {
       label: 'DNS',
       description: 'Service Discovery — разрешение доменных имён с геобалансировкой',
@@ -352,7 +352,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us',
     type: 'datacenter',
-    position: { x: 1000, y: 600 },
+    position: { x: 1000, y: 700 },
     data: {
       label: 'DC US-East',
       description: 'Data Center — реплика для снижения latency в US',
@@ -363,7 +363,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-lb',
     type: 'regionalLb',
-    position: { x: 1250, y: 600 },
+    position: { x: 1250, y: 700 },
     data: {
       label: 'Regional LB',
       description: 'Load Balancer L4/L7 — балансировка внутри ДЦ',
@@ -374,7 +374,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-gw',
     type: 'apiGateway',
-    position: { x: 1500, y: 600 },
+    position: { x: 1500, y: 700 },
     data: {
       label: 'API Gateway',
       description: 'API Gateway — единая точка входа',
@@ -385,7 +385,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-ingress',
     type: 'ingress',
-    position: { x: 1750, y: 600 },
+    position: { x: 1750, y: 700 },
     data: {
       label: 'K8s Ingress',
       description: 'Ingress Controller — L7 роутинг в Kubernetes',
@@ -396,7 +396,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-order-svc',
     type: 'service',
-    position: { x: 2020, y: 520 },
+    position: { x: 2020, y: 620 },
     data: {
       label: 'Order Service',
       description: 'Microservice Replica — только чтение заказов',
@@ -407,7 +407,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-order-pod',
     type: 'pod',
-    position: { x: 2270, y: 520 },
+    position: { x: 2270, y: 620 },
     data: {
       label: 'Order Pod',
       description: 'Pod — минимальная единица деплоя в K8s',
@@ -418,7 +418,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-user-svc',
     type: 'service',
-    position: { x: 2020, y: 660 },
+    position: { x: 2020, y: 760 },
     data: {
       label: 'User Service',
       description: 'Microservice Replica — только чтение пользователей',
@@ -429,7 +429,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-user-pod',
     type: 'pod',
-    position: { x: 2270, y: 660 },
+    position: { x: 2270, y: 760 },
     data: {
       label: 'User Pod',
       description: 'Pod — минимальная единица деплоя в K8s',
@@ -440,7 +440,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-cache',
     type: 'cache',
-    position: { x: 2550, y: 520 },
+    position: { x: 2550, y: 620 },
     data: {
       label: 'Local Cache',
       description: 'Cache-Aside — локальный кэш для снижения latency',
@@ -451,11 +451,22 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-db',
     type: 'database',
-    position: { x: 2550, y: 660 },
+    position: { x: 2550, y: 760 },
     data: {
       label: 'Read Replica',
       description: 'Read Replica — только чтение, async replication',
       technology: 'PostgreSQL',
+      viewLevel: 'cluster',
+    },
+  },
+  {
+    id: 'dc-us-cdc',
+    type: 'service',
+    position: { x: 2550, y: 880 },
+    data: {
+      label: 'CDC Consumer',
+      description: 'Change Data Capture — применяет события к локальной БД',
+      technology: 'Debezium Consumer',
       viewLevel: 'cluster',
     },
   },
@@ -464,7 +475,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia',
     type: 'datacenter',
-    position: { x: 1000, y: 1100 },
+    position: { x: 1000, y: 1200 },
     data: {
       label: 'DC Asia',
       description: 'Data Center — реплика для снижения latency в Asia',
@@ -475,7 +486,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-lb',
     type: 'regionalLb',
-    position: { x: 1250, y: 1100 },
+    position: { x: 1250, y: 1200 },
     data: {
       label: 'Regional LB',
       description: 'Load Balancer L4/L7 — балансировка внутри ДЦ',
@@ -486,7 +497,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-gw',
     type: 'apiGateway',
-    position: { x: 1500, y: 1100 },
+    position: { x: 1500, y: 1200 },
     data: {
       label: 'API Gateway',
       description: 'API Gateway — единая точка входа',
@@ -497,7 +508,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-ingress',
     type: 'ingress',
-    position: { x: 1750, y: 1100 },
+    position: { x: 1750, y: 1200 },
     data: {
       label: 'K8s Ingress',
       description: 'Ingress Controller — L7 роутинг в Kubernetes',
@@ -508,7 +519,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-order-svc',
     type: 'service',
-    position: { x: 2020, y: 1020 },
+    position: { x: 2020, y: 1120 },
     data: {
       label: 'Order Service',
       description: 'Microservice Replica — только чтение заказов',
@@ -519,7 +530,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-order-pod',
     type: 'pod',
-    position: { x: 2270, y: 1020 },
+    position: { x: 2270, y: 1120 },
     data: {
       label: 'Order Pod',
       description: 'Pod — минимальная единица деплоя в K8s',
@@ -530,7 +541,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-user-svc',
     type: 'service',
-    position: { x: 2020, y: 1160 },
+    position: { x: 2020, y: 1260 },
     data: {
       label: 'User Service',
       description: 'Microservice Replica — только чтение пользователей',
@@ -541,7 +552,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-user-pod',
     type: 'pod',
-    position: { x: 2270, y: 1160 },
+    position: { x: 2270, y: 1260 },
     data: {
       label: 'User Pod',
       description: 'Pod — минимальная единица деплоя в K8s',
@@ -552,7 +563,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-cache',
     type: 'cache',
-    position: { x: 2550, y: 1020 },
+    position: { x: 2550, y: 1120 },
     data: {
       label: 'Local Cache',
       description: 'Cache-Aside — локальный кэш для снижения latency',
@@ -563,11 +574,22 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-db',
     type: 'database',
-    position: { x: 2550, y: 1160 },
+    position: { x: 2550, y: 1260 },
     data: {
       label: 'Read Replica',
       description: 'Read Replica — только чтение, async replication',
       technology: 'PostgreSQL',
+      viewLevel: 'cluster',
+    },
+  },
+  {
+    id: 'dc-asia-cdc',
+    type: 'service',
+    position: { x: 2550, y: 1380 },
+    data: {
+      label: 'CDC Consumer',
+      description: 'Change Data Capture — применяет события к локальной БД',
+      technology: 'Debezium Consumer',
       viewLevel: 'cluster',
     },
   },
@@ -576,7 +598,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'cross-dc-kafka',
     type: 'messageQueue',
-    position: { x: 3050, y: 600 },
+    position: { x: 3050, y: 700 },
     data: {
       label: 'Cross-DC Kafka',
       description: 'Event Replication — репликация событий между регионами',
@@ -679,10 +701,14 @@ export const allEdges: ArchEdge[] = [
   { id: 'e-dc-asia-user-pod-db', source: 'dc-asia-user-pod', target: 'dc-asia-db' },
 
   // ============ CROSS-DC REPLICATION ============
-  // Только PostgreSQL streaming replication (единый механизм)
+  // Event-driven replication: Kafka → CDC Consumer → DB
   { id: 'e-dc-eu-kafka-crossdc', source: 'dc-eu-kafka', target: 'cross-dc-kafka' },
-  { id: 'e-crossdc-us', source: 'cross-dc-kafka', target: 'dc-us-db', style: { strokeDasharray: '6,3', stroke: '#6366F1' } },
-  { id: 'e-crossdc-asia', source: 'cross-dc-kafka', target: 'dc-asia-db', style: { strokeDasharray: '6,3', stroke: '#6366F1' } },
+  // US: Cross-DC Kafka → CDC Consumer → Read Replica
+  { id: 'e-crossdc-us-cdc', source: 'cross-dc-kafka', target: 'dc-us-cdc', style: { strokeDasharray: '6,3', stroke: '#6366F1' } },
+  { id: 'e-us-cdc-db', source: 'dc-us-cdc', target: 'dc-us-db', style: { strokeDasharray: '4,4', stroke: '#6366F1' } },
+  // Asia: Cross-DC Kafka → CDC Consumer → Read Replica
+  { id: 'e-crossdc-asia-cdc', source: 'cross-dc-kafka', target: 'dc-asia-cdc', style: { strokeDasharray: '6,3', stroke: '#6366F1' } },
+  { id: 'e-asia-cdc-db', source: 'dc-asia-cdc', target: 'dc-asia-db', style: { strokeDasharray: '4,4', stroke: '#6366F1' } },
 ]
 
 // Для обратной совместимости
