@@ -1,0 +1,18 @@
+import { memo } from 'react'
+import { NodeProps } from 'reactflow'
+import { Smartphone } from 'lucide-react'
+import { BaseNode } from './BaseNode'
+import { NodeData } from '../../../types'
+
+export const ClientNode = memo(({ id, data }: NodeProps<NodeData>) => {
+  return (
+    <BaseNode
+      id={id}
+      data={data}
+      icon={<Smartphone size={20} />}
+      color="#3B82F6"
+    />
+  )
+})
+
+ClientNode.displayName = 'ClientNode'

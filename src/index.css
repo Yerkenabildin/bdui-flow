@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.react-flow__node {
+  cursor: pointer;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+/* Dash animation for active edges */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animated-edge {
+  animation: dash 0.5s linear infinite;
+}
+
+/* Pulse glow for active nodes */
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+}
+
+.node-active {
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+/* Request particle with enhanced glow */
+.request-particle {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Request type specific colors */
+.particle-request {
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+}
+
+.particle-response {
+  filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.8));
+}
+
+.particle-async {
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.8));
+}
+
+/* Smooth glow animation */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 15px currentColor, 0 0 25px currentColor;
+  }
+}
+
+.glow-animate {
+  animation: glow-pulse 1s ease-in-out infinite;
+}
+
+/* Trail fade animation */
+@keyframes trail-fade {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+.trail-particle {
+  animation: trail-fade 0.3s ease-out forwards;
+}
+
+/* Edge glow effects */
+@keyframes edge-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+}
+
+.edge-active {
+  animation: edge-glow 0.8s ease-in-out infinite;
+}
+
+/* Timeline animations */
+@keyframes timeline-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.timeline-bar-animate {
+  animation: timeline-progress 0.3s ease-out;
+  transform-origin: left;
+}
+
+/* Latency color indicators */
+.latency-fast {
+  color: #22c55e;
+}
+
+.latency-medium {
+  color: #eab308;
+}
+
+.latency-slow {
+  color: #f97316;
+}
+
+.latency-very-slow {
+  color: #ef4444;
+}
+
+/* Smooth scrollbar for timeline */
+.timeline-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.timeline-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.timeline-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Node hover effect */
+.node-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Processing indicator */
+@keyframes processing-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.processing-indicator {
+  animation: processing-spin 1s linear infinite;
+}
