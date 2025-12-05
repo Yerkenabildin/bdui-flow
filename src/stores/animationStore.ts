@@ -16,6 +16,7 @@ interface AnimationStore {
   activeEdgeId: string | null
   activeNodeIds: string[]
   particleProgress: number
+  isReverse: boolean           // Направление анимации (true = от target к source)
 
   // Новые поля для улучшенной визуализации
   currentStepType: StepType | null
@@ -34,7 +35,7 @@ interface AnimationStore {
   stepBackward: () => void
   setStep: (index: number) => void
   setSpeed: (speed: number) => void
-  setActiveEdge: (edgeId: string | null) => void
+  setActiveEdge: (edgeId: string | null, reverse?: boolean) => void
   setActiveNodes: (nodeIds: string[]) => void
   setParticleProgress: (progress: number) => void
   setCurrentStepInfo: (type: StepType | null, protocol: string | null, duration: number | null) => void
@@ -51,6 +52,7 @@ export const useAnimationStore = create<AnimationStore>((set) => ({
   activeEdgeId: null,
   activeNodeIds: [],
   particleProgress: 0,
+  isReverse: false,
   currentStepType: null,
   currentProtocol: null,
   currentDuration: null,
@@ -64,6 +66,7 @@ export const useAnimationStore = create<AnimationStore>((set) => ({
     playbackState: 'idle',
     currentStepIndex: 0,
     particleProgress: 0,
+    isReverse: false,
     nodeStats: {},
     completedSteps: [],
     currentStepType: null,
@@ -83,7 +86,7 @@ export const useAnimationStore = create<AnimationStore>((set) => ({
 
   setStep: (index) => set({ currentStepIndex: index, particleProgress: 0 }),
   setSpeed: (speed) => set({ speed }),
-  setActiveEdge: (edgeId) => set({ activeEdgeId: edgeId }),
+  setActiveEdge: (edgeId, reverse = false) => set({ activeEdgeId: edgeId, isReverse: reverse }),
   setActiveNodes: (nodeIds) => set({ activeNodeIds: nodeIds }),
   setParticleProgress: (progress) => set({ particleProgress: progress }),
 
@@ -127,6 +130,7 @@ export const useAnimationStore = create<AnimationStore>((set) => ({
     activeEdgeId: null,
     activeNodeIds: [],
     particleProgress: 0,
+    isReverse: false,
     currentStepType: null,
     currentProtocol: null,
     currentDuration: null,

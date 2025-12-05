@@ -57,10 +57,14 @@ const AnimatedEdge = memo(({
   const pathRef = useRef<SVGPathElement>(null)
   const activeEdgeId = useAnimationStore((s) => s.activeEdgeId)
   const particleProgress = useAnimationStore((s) => s.particleProgress)
+  const isReverse = useAnimationStore((s) => s.isReverse)
   const currentStepType = useAnimationStore((s) => s.currentStepType)
   const currentProtocol = useAnimationStore((s) => s.currentProtocol)
   const currentDuration = useAnimationStore((s) => s.currentDuration)
   const isActive = activeEdgeId === id
+
+  // При reverse направлении инвертируем progress
+  const effectiveProgress = isReverse ? (1 - particleProgress) : particleProgress
 
   const config = currentStepType ? stepTypeConfig[currentStepType] : stepTypeConfig.request
   const latencyColor = getLatencyColor(currentDuration)
@@ -80,11 +84,12 @@ const AnimatedEdge = memo(({
 
     const positions = []
     const trailLength = 5
-    const trailSpacing = 0.06
+    // При reverse trail идёт в обратном направлении
+    const trailSpacing = isReverse ? -0.06 : 0.06
     const pathLength = pathRef.current.getTotalLength()
 
     for (let i = 0; i < trailLength; i++) {
-      const progress = particleProgress - (i * trailSpacing)
+      const progress = effectiveProgress - (i * trailSpacing)
       if (progress > 0 && progress < 1) {
         const point = pathRef.current.getPointAtLength(progress * pathLength)
         positions.push({
@@ -96,15 +101,15 @@ const AnimatedEdge = memo(({
       }
     }
     return positions
-  }, [isActive, particleProgress])
+  }, [isActive, particleProgress, effectiveProgress, isReverse])
 
   // Основная позиция частицы на кривой Безье
   const particlePosition = useMemo(() => {
     if (!pathRef.current || particleProgress <= 0 || particleProgress >= 1) return null
     const pathLength = pathRef.current.getTotalLength()
-    const point = pathRef.current.getPointAtLength(particleProgress * pathLength)
+    const point = pathRef.current.getPointAtLength(effectiveProgress * pathLength)
     return { x: point.x, y: point.y }
-  }, [particleProgress])
+  }, [particleProgress, effectiveProgress])
 
   return (
     <>

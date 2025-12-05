@@ -41,6 +41,8 @@ export interface Step {
   id: string
   fromNode: string
   toNode: string
+  edgeId: string             // ID edge для анимации
+  reverse?: boolean          // true = анимация в обратном направлении (от target к source)
   type: StepType
   title: string
   description: string

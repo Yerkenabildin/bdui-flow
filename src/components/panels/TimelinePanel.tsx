@@ -75,7 +75,8 @@ export default function TimelinePanel() {
     const step = getCurrentStep(index)
     if (step) {
       setStep(index)
-      setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+      const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+      setActiveEdge(edgeId, step.reverse || false)
       setActiveNodes([step.fromNode, step.toNode])
       setCurrentStepInfo(step.type, null, step.realLatency)
     }

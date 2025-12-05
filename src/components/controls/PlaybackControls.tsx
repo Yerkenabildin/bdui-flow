@@ -74,9 +74,9 @@ export default function PlaybackControls() {
       return
     }
 
-    // Set active edge and nodes
-    const edgeId = `e-${step.fromNode}-${step.toNode}`
-    setActiveEdge(edgeId)
+    // Set active edge and nodes (используем edgeId из step или fallback)
+    const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+    setActiveEdge(edgeId, step.reverse || false)
     setActiveNodes([step.fromNode, step.toNode])
 
     // Set step info for visualization (используем realLatency для отображения)
@@ -134,7 +134,8 @@ export default function PlaybackControls() {
       const step = getCurrentStep(nextIndex)
       if (step) {
         stepForward()
-        setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+        const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+        setActiveEdge(edgeId, step.reverse || false)
         setActiveNodes([step.fromNode, step.toNode])
         const protocol = extractProtocol(step)
         setCurrentStepInfo(step.type, protocol, step.realLatency)
@@ -148,7 +149,8 @@ export default function PlaybackControls() {
       const step = getCurrentStep(prevIndex)
       if (step) {
         stepBackward()
-        setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+        const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+        setActiveEdge(edgeId, step.reverse || false)
         setActiveNodes([step.fromNode, step.toNode])
         const protocol = extractProtocol(step)
         setCurrentStepInfo(step.type, protocol, step.realLatency)
@@ -160,7 +162,8 @@ export default function PlaybackControls() {
     const step = getCurrentStep(0)
     if (step) {
       setStep(0)
-      setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+      const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+      setActiveEdge(edgeId, step.reverse || false)
       setActiveNodes([step.fromNode, step.toNode])
       const protocol = extractProtocol(step)
       setCurrentStepInfo(step.type, protocol, step.realLatency)
@@ -173,7 +176,8 @@ export default function PlaybackControls() {
       const step = getCurrentStep(lastIndex)
       if (step) {
         setStep(lastIndex)
-        setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+        const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+        setActiveEdge(edgeId, step.reverse || false)
         setActiveNodes([step.fromNode, step.toNode])
         const protocol = extractProtocol(step)
         setCurrentStepInfo(step.type, protocol, step.realLatency)

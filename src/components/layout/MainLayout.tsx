@@ -45,7 +45,8 @@ export default function MainLayout() {
             stepForward()
             const step = getCurrentStep(nextIndex)
             if (step) {
-              setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+              const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+              setActiveEdge(edgeId, step.reverse || false)
               setActiveNodes([step.fromNode, step.toNode])
               setCurrentStepInfo(step.type, null, step.realLatency)
             }
@@ -60,7 +61,8 @@ export default function MainLayout() {
             stepBackward()
             const step = getCurrentStep(prevIndex)
             if (step) {
-              setActiveEdge(`e-${step.fromNode}-${step.toNode}`)
+              const edgeId = step.edgeId || `e-${step.fromNode}-${step.toNode}`
+              setActiveEdge(edgeId, step.reverse || false)
               setActiveNodes([step.fromNode, step.toNode])
               setCurrentStepInfo(step.type, null, step.realLatency)
             }
@@ -81,7 +83,8 @@ export default function MainLayout() {
           setStep(0)
           const firstStep = getCurrentStep(0)
           if (firstStep) {
-            setActiveEdge(`e-${firstStep.fromNode}-${firstStep.toNode}`)
+            const edgeId = firstStep.edgeId || `e-${firstStep.fromNode}-${firstStep.toNode}`
+            setActiveEdge(edgeId, firstStep.reverse || false)
             setActiveNodes([firstStep.fromNode, firstStep.toNode])
             setCurrentStepInfo(firstStep.type, null, firstStep.realLatency)
           }
@@ -93,7 +96,8 @@ export default function MainLayout() {
           setStep(lastIndex)
           const lastStep = getCurrentStep(lastIndex)
           if (lastStep) {
-            setActiveEdge(`e-${lastStep.fromNode}-${lastStep.toNode}`)
+            const edgeId = lastStep.edgeId || `e-${lastStep.fromNode}-${lastStep.toNode}`
+            setActiveEdge(edgeId, lastStep.reverse || false)
             setActiveNodes([lastStep.fromNode, lastStep.toNode])
             setCurrentStepInfo(lastStep.type, null, lastStep.realLatency)
           }
