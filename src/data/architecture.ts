@@ -587,57 +587,96 @@ export const allNodes: ArchNode[] = [
 ]
 
 export const allEdges: ArchEdge[] = [
-  // Client → Internet
+  // Client → Internet (request)
   { id: 'e-client-dns', source: 'client', target: 'dns' },
   { id: 'e-dns-cdn', source: 'dns', target: 'cdn' },
-  { id: 'e-cdn-glb', source: 'cdn', target: 'global-lb' },
+  { id: 'e-cdn-global-lb', source: 'cdn', target: 'global-lb' },
+  // Internet → Client (response)
+  { id: 'e-cdn-client', source: 'cdn', target: 'client' },
+  { id: 'e-global-lb-cdn', source: 'global-lb', target: 'cdn' },
 
-  // Global LB → All DCs
-  { id: 'e-glb-dc-eu', source: 'global-lb', target: 'dc-eu' },
-  { id: 'e-glb-dc-us', source: 'global-lb', target: 'dc-us' },
-  { id: 'e-glb-dc-asia', source: 'global-lb', target: 'dc-asia' },
+  // Global LB → All DCs (request)
+  { id: 'e-global-lb-dc-eu', source: 'global-lb', target: 'dc-eu' },
+  { id: 'e-global-lb-dc-us', source: 'global-lb', target: 'dc-us' },
+  { id: 'e-global-lb-dc-asia', source: 'global-lb', target: 'dc-asia' },
+  // DCs → Global LB (response)
+  { id: 'e-dc-eu-global-lb', source: 'dc-eu', target: 'global-lb' },
+  { id: 'e-dc-us-global-lb', source: 'dc-us', target: 'global-lb' },
+  { id: 'e-dc-asia-global-lb', source: 'dc-asia', target: 'global-lb' },
 
   // ===== DC EUROPE =====
-  { id: 'e-dc-eu-lb', source: 'dc-eu', target: 'dc-eu-lb' },
-  { id: 'e-dc-eu-lb-gw', source: 'dc-eu-lb', target: 'dc-eu-gw' },
-  { id: 'e-dc-eu-gw-auth', source: 'dc-eu-gw', target: 'dc-eu-auth' },
-  { id: 'e-dc-eu-auth-session', source: 'dc-eu-auth', target: 'dc-eu-session' },
+  // Request path
+  { id: 'e-dc-eu-dc-eu-lb', source: 'dc-eu', target: 'dc-eu-lb' },
+  { id: 'e-dc-eu-lb-dc-eu-gw', source: 'dc-eu-lb', target: 'dc-eu-gw' },
+  { id: 'e-dc-eu-gw-dc-eu-auth', source: 'dc-eu-gw', target: 'dc-eu-auth' },
+  { id: 'e-dc-eu-auth-dc-eu-session', source: 'dc-eu-auth', target: 'dc-eu-session' },
+  // Response path (reverse)
+  { id: 'e-dc-eu-lb-dc-eu', source: 'dc-eu-lb', target: 'dc-eu' },
+  { id: 'e-dc-eu-gw-dc-eu-lb', source: 'dc-eu-gw', target: 'dc-eu-lb' },
+  { id: 'e-dc-eu-auth-dc-eu-gw', source: 'dc-eu-auth', target: 'dc-eu-gw' },
+  { id: 'e-dc-eu-session-dc-eu-auth', source: 'dc-eu-session', target: 'dc-eu-auth' },
   // Rate Limiter
-  { id: 'e-dc-eu-gw-ratelimit', source: 'dc-eu-gw', target: 'dc-eu-ratelimit' },
-  { id: 'e-dc-eu-ratelimit-cache', source: 'dc-eu-ratelimit', target: 'dc-eu-cache', style: { strokeDasharray: '4,4' } },
-  { id: 'e-dc-eu-gw-ingress', source: 'dc-eu-gw', target: 'dc-eu-ingress' },
+  { id: 'e-dc-eu-gw-dc-eu-ratelimit', source: 'dc-eu-gw', target: 'dc-eu-ratelimit' },
+  { id: 'e-dc-eu-ratelimit-dc-eu-cache', source: 'dc-eu-ratelimit', target: 'dc-eu-cache', style: { strokeDasharray: '4,4' } },
+  { id: 'e-dc-eu-cache-dc-eu-ratelimit', source: 'dc-eu-cache', target: 'dc-eu-ratelimit', style: { strokeDasharray: '4,4' } },
+  { id: 'e-dc-eu-ratelimit-dc-eu-gw', source: 'dc-eu-ratelimit', target: 'dc-eu-gw' },
+  { id: 'e-dc-eu-gw-dc-eu-ingress', source: 'dc-eu-gw', target: 'dc-eu-ingress' },
+  { id: 'e-dc-eu-ingress-dc-eu-gw', source: 'dc-eu-ingress', target: 'dc-eu-gw' },
   // Istio Control Plane → Pods (управление sidecar)
   { id: 'e-dc-eu-istiod-user', source: 'dc-eu-istiod', target: 'dc-eu-user-pod', style: { strokeDasharray: '3,3', stroke: '#8B5CF6' } },
   { id: 'e-dc-eu-istiod-order', source: 'dc-eu-istiod', target: 'dc-eu-order-pod', style: { strokeDasharray: '3,3', stroke: '#8B5CF6' } },
   { id: 'e-dc-eu-istiod-payment', source: 'dc-eu-istiod', target: 'dc-eu-payment-pod', style: { strokeDasharray: '3,3', stroke: '#8B5CF6' } },
   { id: 'e-dc-eu-istiod-inventory', source: 'dc-eu-istiod', target: 'dc-eu-inventory-pod', style: { strokeDasharray: '3,3', stroke: '#8B5CF6' } },
-  // EU Ingress → Services
-  { id: 'e-dc-eu-ing-user', source: 'dc-eu-ingress', target: 'dc-eu-user-svc' },
-  { id: 'e-dc-eu-ing-order', source: 'dc-eu-ingress', target: 'dc-eu-order-svc' },
-  { id: 'e-dc-eu-ing-payment', source: 'dc-eu-ingress', target: 'dc-eu-payment-svc' },
-  { id: 'e-dc-eu-ing-inventory', source: 'dc-eu-ingress', target: 'dc-eu-inventory-svc' },
-  // EU Services → Pods (с встроенным Envoy sidecar)
-  { id: 'e-dc-eu-user-pod', source: 'dc-eu-user-svc', target: 'dc-eu-user-pod' },
-  { id: 'e-dc-eu-order-pod', source: 'dc-eu-order-svc', target: 'dc-eu-order-pod' },
-  { id: 'e-dc-eu-payment-pod', source: 'dc-eu-payment-svc', target: 'dc-eu-payment-pod' },
-  { id: 'e-dc-eu-inventory-pod', source: 'dc-eu-inventory-svc', target: 'dc-eu-inventory-pod' },
-  // EU Pods → их собственные базы данных (Database per Service)
-  { id: 'e-dc-eu-user-pod-db', source: 'dc-eu-user-pod', target: 'dc-eu-user-db' },
-  { id: 'e-dc-eu-order-pod-db', source: 'dc-eu-order-pod', target: 'dc-eu-order-db' },
-  { id: 'e-dc-eu-payment-pod-db', source: 'dc-eu-payment-pod', target: 'dc-eu-payment-db' },
-  { id: 'e-dc-eu-inventory-pod-db', source: 'dc-eu-inventory-pod', target: 'dc-eu-inventory-db' },
-  // EU Pods → Kafka
-  { id: 'e-dc-eu-order-pod-kafka', source: 'dc-eu-order-pod', target: 'dc-eu-kafka' },
-  { id: 'e-dc-eu-payment-pod-kafka', source: 'dc-eu-payment-pod', target: 'dc-eu-kafka' },
-  { id: 'e-dc-eu-inventory-pod-kafka', source: 'dc-eu-inventory-pod', target: 'dc-eu-kafka' },
+  // EU Ingress → Services (request)
+  { id: 'e-dc-eu-ingress-dc-eu-user-svc', source: 'dc-eu-ingress', target: 'dc-eu-user-svc' },
+  { id: 'e-dc-eu-ingress-dc-eu-order-svc', source: 'dc-eu-ingress', target: 'dc-eu-order-svc' },
+  { id: 'e-dc-eu-ingress-dc-eu-payment-svc', source: 'dc-eu-ingress', target: 'dc-eu-payment-svc' },
+  { id: 'e-dc-eu-ingress-dc-eu-inventory-svc', source: 'dc-eu-ingress', target: 'dc-eu-inventory-svc' },
+  // EU Services → Ingress (response)
+  { id: 'e-dc-eu-user-svc-dc-eu-ingress', source: 'dc-eu-user-svc', target: 'dc-eu-ingress' },
+  { id: 'e-dc-eu-order-svc-dc-eu-ingress', source: 'dc-eu-order-svc', target: 'dc-eu-ingress' },
+  { id: 'e-dc-eu-payment-svc-dc-eu-ingress', source: 'dc-eu-payment-svc', target: 'dc-eu-ingress' },
+  { id: 'e-dc-eu-inventory-svc-dc-eu-ingress', source: 'dc-eu-inventory-svc', target: 'dc-eu-ingress' },
+  // EU Services → Pods (request)
+  { id: 'e-dc-eu-user-svc-dc-eu-user-pod', source: 'dc-eu-user-svc', target: 'dc-eu-user-pod' },
+  { id: 'e-dc-eu-order-svc-dc-eu-order-pod', source: 'dc-eu-order-svc', target: 'dc-eu-order-pod' },
+  { id: 'e-dc-eu-payment-svc-dc-eu-payment-pod', source: 'dc-eu-payment-svc', target: 'dc-eu-payment-pod' },
+  { id: 'e-dc-eu-inventory-svc-dc-eu-inventory-pod', source: 'dc-eu-inventory-svc', target: 'dc-eu-inventory-pod' },
+  // EU Pods → Services (response)
+  { id: 'e-dc-eu-user-pod-dc-eu-user-svc', source: 'dc-eu-user-pod', target: 'dc-eu-user-svc' },
+  { id: 'e-dc-eu-order-pod-dc-eu-order-svc', source: 'dc-eu-order-pod', target: 'dc-eu-order-svc' },
+  { id: 'e-dc-eu-payment-pod-dc-eu-payment-svc', source: 'dc-eu-payment-pod', target: 'dc-eu-payment-svc' },
+  { id: 'e-dc-eu-inventory-pod-dc-eu-inventory-svc', source: 'dc-eu-inventory-pod', target: 'dc-eu-inventory-svc' },
+  // EU Pods → DBs (request)
+  { id: 'e-dc-eu-user-pod-dc-eu-user-db', source: 'dc-eu-user-pod', target: 'dc-eu-user-db' },
+  { id: 'e-dc-eu-order-pod-dc-eu-order-db', source: 'dc-eu-order-pod', target: 'dc-eu-order-db' },
+  { id: 'e-dc-eu-payment-pod-dc-eu-payment-db', source: 'dc-eu-payment-pod', target: 'dc-eu-payment-db' },
+  { id: 'e-dc-eu-inventory-pod-dc-eu-inventory-db', source: 'dc-eu-inventory-pod', target: 'dc-eu-inventory-db' },
+  // EU DBs → Pods (response)
+  { id: 'e-dc-eu-user-db-dc-eu-user-pod', source: 'dc-eu-user-db', target: 'dc-eu-user-pod' },
+  { id: 'e-dc-eu-order-db-dc-eu-order-pod', source: 'dc-eu-order-db', target: 'dc-eu-order-pod' },
+  { id: 'e-dc-eu-payment-db-dc-eu-payment-pod', source: 'dc-eu-payment-db', target: 'dc-eu-payment-pod' },
+  { id: 'e-dc-eu-inventory-db-dc-eu-inventory-pod', source: 'dc-eu-inventory-db', target: 'dc-eu-inventory-pod' },
+  // EU Pods → Kafka (publish)
+  { id: 'e-dc-eu-order-pod-dc-eu-kafka', source: 'dc-eu-order-pod', target: 'dc-eu-kafka' },
+  { id: 'e-dc-eu-payment-pod-dc-eu-kafka', source: 'dc-eu-payment-pod', target: 'dc-eu-kafka' },
+  { id: 'e-dc-eu-inventory-pod-dc-eu-kafka', source: 'dc-eu-inventory-pod', target: 'dc-eu-kafka' },
+  // Kafka → Consumer Pods (consume)
+  { id: 'e-dc-eu-kafka-dc-eu-order-pod', source: 'dc-eu-kafka', target: 'dc-eu-order-pod', style: { strokeDasharray: '4,4' } },
+  { id: 'e-dc-eu-kafka-dc-eu-payment-pod', source: 'dc-eu-kafka', target: 'dc-eu-payment-pod', style: { strokeDasharray: '4,4' } },
+  { id: 'e-dc-eu-kafka-dc-eu-inventory-pod', source: 'dc-eu-kafka', target: 'dc-eu-inventory-pod', style: { strokeDasharray: '4,4' } },
   // Kafka → Schema Registry, DLQ
-  { id: 'e-dc-eu-kafka-schema', source: 'dc-eu-kafka', target: 'dc-eu-schema-registry', style: { strokeDasharray: '3,3', stroke: '#10B981' } },
-  { id: 'e-dc-eu-kafka-dlq', source: 'dc-eu-kafka', target: 'dc-eu-dlq', style: { strokeDasharray: '4,4', stroke: '#EF4444' } },
-  // EU Pods → Cache
-  { id: 'e-dc-eu-user-pod-cache', source: 'dc-eu-user-pod', target: 'dc-eu-cache' },
-  { id: 'e-dc-eu-order-pod-cache', source: 'dc-eu-order-pod', target: 'dc-eu-cache' },
-  // Inter-service через mesh (Pod-to-Pod, sidecar внутри)
-  { id: 'e-dc-eu-order-user', source: 'dc-eu-order-pod', target: 'dc-eu-user-pod', style: { strokeDasharray: '2,2', stroke: '#06B6D4' } },
+  { id: 'e-dc-eu-kafka-dc-eu-schema-registry', source: 'dc-eu-kafka', target: 'dc-eu-schema-registry', style: { strokeDasharray: '3,3', stroke: '#10B981' } },
+  { id: 'e-dc-eu-kafka-dc-eu-dlq', source: 'dc-eu-kafka', target: 'dc-eu-dlq', style: { strokeDasharray: '4,4', stroke: '#EF4444' } },
+  // EU Pods → Cache (request)
+  { id: 'e-dc-eu-user-pod-dc-eu-cache', source: 'dc-eu-user-pod', target: 'dc-eu-cache' },
+  { id: 'e-dc-eu-order-pod-dc-eu-cache', source: 'dc-eu-order-pod', target: 'dc-eu-cache' },
+  // EU Cache → Pods (response)
+  { id: 'e-dc-eu-cache-dc-eu-user-pod', source: 'dc-eu-cache', target: 'dc-eu-user-pod' },
+  { id: 'e-dc-eu-cache-dc-eu-order-pod', source: 'dc-eu-cache', target: 'dc-eu-order-pod' },
+  // Inter-service через mesh (Pod-to-Pod, bidirectional)
+  { id: 'e-dc-eu-order-pod-dc-eu-user-pod', source: 'dc-eu-order-pod', target: 'dc-eu-user-pod', style: { strokeDasharray: '2,2', stroke: '#06B6D4' } },
+  { id: 'e-dc-eu-user-pod-dc-eu-order-pod', source: 'dc-eu-user-pod', target: 'dc-eu-order-pod', style: { strokeDasharray: '2,2', stroke: '#06B6D4' } },
   // Observability - все поды отправляют метрики
   { id: 'e-dc-eu-pods-prometheus', source: 'dc-eu-order-pod', target: 'dc-eu-prometheus', style: { strokeDasharray: '2,2', stroke: '#F59E0B' } },
   { id: 'e-dc-eu-pods-jaeger', source: 'dc-eu-order-pod', target: 'dc-eu-jaeger', style: { strokeDasharray: '2,2', stroke: '#F59E0B' } },
@@ -669,12 +708,12 @@ export const allEdges: ArchEdge[] = [
   { id: 'e-dc-asia-user-db', source: 'dc-asia-user-pod', target: 'dc-asia-db' },
 
   // ===== CROSS-DC REPLICATION =====
-  { id: 'e-eu-kafka-cross', source: 'dc-eu-kafka', target: 'cross-dc-kafka' },
-  { id: 'e-cross-us-db', source: 'cross-dc-kafka', target: 'dc-us-db', style: { strokeDasharray: '5,5' } },
-  { id: 'e-cross-asia-db', source: 'cross-dc-kafka', target: 'dc-asia-db', style: { strokeDasharray: '5,5' } },
+  { id: 'e-dc-eu-kafka-cross-dc-kafka', source: 'dc-eu-kafka', target: 'cross-dc-kafka' },
+  { id: 'e-cross-dc-kafka-dc-us-db', source: 'cross-dc-kafka', target: 'dc-us-db', style: { strokeDasharray: '5,5' } },
+  { id: 'e-cross-dc-kafka-dc-asia-db', source: 'cross-dc-kafka', target: 'dc-asia-db', style: { strokeDasharray: '5,5' } },
   // Master → Replica DB replication (Order DB as example)
-  { id: 'e-eu-us-db-repl', source: 'dc-eu-order-db', target: 'dc-us-db', style: { strokeDasharray: '8,4', stroke: '#6366F1' } },
-  { id: 'e-eu-asia-db-repl', source: 'dc-eu-order-db', target: 'dc-asia-db', style: { strokeDasharray: '8,4', stroke: '#6366F1' } },
+  { id: 'e-dc-eu-order-db-dc-us-db', source: 'dc-eu-order-db', target: 'dc-us-db', style: { strokeDasharray: '8,4', stroke: '#6366F1' } },
+  { id: 'e-dc-eu-order-db-dc-asia-db', source: 'dc-eu-order-db', target: 'dc-asia-db', style: { strokeDasharray: '8,4', stroke: '#6366F1' } },
 ]
 
 // Для обратной совместимости
