@@ -113,7 +113,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-user-svc',
     type: 'serviceGroup',
-    position: { x: 2020, y: -140 },
+    position: { x: 2020, y: -180 },
     data: {
       label: 'User Service',
       description: 'Microservice — бизнес-логика пользователей',
@@ -154,7 +154,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-order-svc',
     type: 'serviceGroup',
-    position: { x: 2020, y: 20 },
+    position: { x: 2020, y: 0 },
     data: {
       label: 'Order Service',
       description: 'Microservice — SAGA orchestrator',
@@ -236,7 +236,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-inventory-svc',
     type: 'serviceGroup',
-    position: { x: 2020, y: 340 },
+    position: { x: 2020, y: 360 },
     data: {
       label: 'Inventory Service',
       description: 'Microservice — склад',
@@ -278,7 +278,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-user-db',
     type: 'database',
-    position: { x: 2300, y: -120 },
+    position: { x: 2380, y: -160 },
     data: {
       label: 'User DB',
       description: 'Database per Service — изолированная БД',
@@ -289,7 +289,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-order-db',
     type: 'database',
-    position: { x: 2300, y: 40 },
+    position: { x: 2380, y: 20 },
     data: {
       label: 'Order DB',
       description: 'Database per Service — изолированная БД',
@@ -300,7 +300,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-payment-db',
     type: 'database',
-    position: { x: 2300, y: 200 },
+    position: { x: 2380, y: 200 },
     data: {
       label: 'Payment DB',
       description: 'Database per Service — изолированная БД',
@@ -311,7 +311,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-inventory-db',
     type: 'database',
-    position: { x: 2300, y: 360 },
+    position: { x: 2380, y: 380 },
     data: {
       label: 'Inventory DB',
       description: 'Database per Service — изолированная БД',
@@ -323,7 +323,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-cache',
     type: 'cache',
-    position: { x: 2550, y: 500 },
+    position: { x: 2630, y: 500 },
     data: {
       label: 'Distributed Cache',
       description: 'Distributed Cache — кэширование + Rate Limit counters',
@@ -335,7 +335,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-kafka',
     type: 'messageQueue',
-    position: { x: 2800, y: 180 },
+    position: { x: 2880, y: 180 },
     data: {
       label: 'Event Bus',
       description: 'Event Streaming + Schema Registry + DLQ внутри',
@@ -359,7 +359,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-prometheus',
     type: 'service',
-    position: { x: 2800, y: -120 },
+    position: { x: 2880, y: -160 },
     data: {
       label: 'Metrics Collector',
       description: 'Metrics Collection — сбор метрик со всех сервисов',
@@ -370,7 +370,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-eu-jaeger',
     type: 'service',
-    position: { x: 2800, y: 450 },
+    position: { x: 2880, y: 450 },
     data: {
       label: 'Distributed Tracing',
       description: 'Distributed Tracing — отслеживание запросов через систему',
@@ -521,7 +521,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-cache',
     type: 'cache',
-    position: { x: 2550, y: 680 },
+    position: { x: 2380, y: 680 },
     data: {
       label: 'Local Cache',
       description: 'Cache-Aside — локальный кэш для снижения latency',
@@ -532,7 +532,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-db',
     type: 'database',
-    position: { x: 2550, y: 820 },
+    position: { x: 2380, y: 830 },
     data: {
       label: 'Read Replica',
       description: 'Read Replica — только чтение, async replication',
@@ -543,7 +543,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-us-cdc',
     type: 'service',
-    position: { x: 2550, y: 960 },
+    position: { x: 2630, y: 830 },
     data: {
       label: 'CDC Consumer',
       description: 'Change Data Capture — применяет события к локальной БД',
@@ -682,7 +682,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-cache',
     type: 'cache',
-    position: { x: 2550, y: 1180 },
+    position: { x: 2380, y: 1180 },
     data: {
       label: 'Local Cache',
       description: 'Cache-Aside — локальный кэш для снижения latency',
@@ -693,7 +693,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-db',
     type: 'database',
-    position: { x: 2550, y: 1320 },
+    position: { x: 2380, y: 1330 },
     data: {
       label: 'Read Replica',
       description: 'Read Replica — только чтение, async replication',
@@ -704,7 +704,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'dc-asia-cdc',
     type: 'service',
-    position: { x: 2550, y: 1460 },
+    position: { x: 2630, y: 1330 },
     data: {
       label: 'CDC Consumer',
       description: 'Change Data Capture — применяет события к локальной БД',
@@ -717,7 +717,7 @@ export const allNodes: ArchNode[] = [
   {
     id: 'cross-dc-kafka',
     type: 'messageQueue',
-    position: { x: 3050, y: 700 },
+    position: { x: 3130, y: 700 },
     data: {
       label: 'Cross-DC Event Bus',
       description: 'Event Replication — репликация событий между регионами',
