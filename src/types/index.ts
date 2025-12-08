@@ -10,7 +10,7 @@ export type NodeType =
   | 'apiGateway'
   | 'authService'
   | 'rateLimiter'
-  | 'k8sCluster'
+  | 'containerOrchestration'
   | 'ingress'
   | 'service'
   | 'pod'

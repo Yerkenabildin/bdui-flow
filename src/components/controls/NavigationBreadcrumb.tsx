@@ -18,7 +18,7 @@ export default function NavigationBreadcrumb() {
     }
 
     if (viewLevel === 'cluster') {
-      crumbs.push({ label: 'K8s Cluster', level: 'cluster' })
+      crumbs.push({ label: 'Compute Cluster', level: 'cluster' })
     }
 
     return crumbs

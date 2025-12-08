@@ -7,7 +7,7 @@ import { DataCenterNode } from './DataCenterNode'
 import { ApiGatewayNode } from './ApiGatewayNode'
 import { AuthServiceNode } from './AuthServiceNode'
 import { RateLimiterNode } from './RateLimiterNode'
-import { K8sClusterNode } from './K8sClusterNode'
+import { ContainerOrchestrationNode } from './ContainerOrchestrationNode'
 import { ServiceNode, IngressNode } from './ServiceNode'
 import { PodNode } from './PodNode'
 import { SidecarNode } from './SidecarNode'
@@ -25,7 +25,7 @@ export const nodeTypes: NodeTypes = {
   apiGateway: ApiGatewayNode,
   authService: AuthServiceNode,
   rateLimiter: RateLimiterNode,
-  k8sCluster: K8sClusterNode,
+  containerOrchestration: ContainerOrchestrationNode,
   service: ServiceNode,
   ingress: IngressNode,
   pod: PodNode,

@@ -105,7 +105,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Token Blacklist',
       description: 'JWT Blacklist — отозванные токены (logout/revoke)',
-      technology: 'Redis Set + TTL',
+      technology: 'In-memory store + TTL',
       viewLevel: 'datacenter',
     },
   },
@@ -114,8 +114,8 @@ export const allNodes: ArchNode[] = [
     type: 'ingress',
     position: { x: 1750, y: 50 },
     data: {
-      label: 'K8s Ingress',
-      description: 'Ingress Controller — L7 роутинг в Kubernetes',
+      label: 'Ingress Controller',
+      description: 'Ingress Controller — L7 роутинг в кластер оркестрации',
       technology: 'NGINX',
       viewLevel: 'cluster',
     },
@@ -138,8 +138,8 @@ export const allNodes: ArchNode[] = [
     position: { x: 2300, y: -120 },
     data: {
       label: 'User Pod',
-      description: 'Pod с Envoy Sidecar — app + proxy в одном network namespace',
-      technology: 'Go + Envoy',
+      description: 'Pod с Sidecar — app + proxy в одном network namespace',
+      technology: 'Go + Sidecar',
       viewLevel: 'cluster',
     },
   },
@@ -160,8 +160,8 @@ export const allNodes: ArchNode[] = [
     position: { x: 2300, y: 20 },
     data: {
       label: 'Order Pod',
-      description: 'Pod с Envoy Sidecar — app + proxy в одном network namespace',
-      technology: 'Java + Envoy',
+      description: 'Pod с Sidecar — app + proxy в одном network namespace',
+      technology: 'Java + Sidecar',
       viewLevel: 'cluster',
     },
   },
@@ -182,8 +182,8 @@ export const allNodes: ArchNode[] = [
     position: { x: 2300, y: 160 },
     data: {
       label: 'Payment Pod',
-      description: 'Pod с Envoy Sidecar — app + proxy в одном network namespace',
-      technology: 'Node.js + Envoy',
+      description: 'Pod с Sidecar — app + proxy в одном network namespace',
+      technology: 'Node.js + Sidecar',
       viewLevel: 'cluster',
     },
   },
@@ -204,8 +204,8 @@ export const allNodes: ArchNode[] = [
     position: { x: 2300, y: 300 },
     data: {
       label: 'Inventory Pod',
-      description: 'Pod с Envoy Sidecar — app + proxy в одном network namespace',
-      technology: 'Python + Envoy',
+      description: 'Pod с Sidecar — app + proxy в одном network namespace',
+      technology: 'Python + Sidecar',
       viewLevel: 'cluster',
     },
   },
@@ -217,7 +217,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'User DB',
       description: 'Database per Service — изолированная БД User сервиса',
-      technology: 'PostgreSQL',
+      technology: 'e.g. PostgreSQL, MySQL',
       viewLevel: 'cluster',
     },
   },
@@ -228,7 +228,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Order DB',
       description: 'Database per Service — изолированная БД Order сервиса',
-      technology: 'PostgreSQL',
+      technology: 'e.g. PostgreSQL, Spanner',
       viewLevel: 'cluster',
     },
   },
@@ -239,7 +239,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Payment DB',
       description: 'Database per Service — изолированная БД Payment сервиса',
-      technology: 'PostgreSQL',
+      technology: 'e.g. PostgreSQL, MySQL',
       viewLevel: 'cluster',
     },
   },
@@ -250,7 +250,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Inventory DB',
       description: 'Database per Service — изолированная БД Inventory сервиса',
-      technology: 'PostgreSQL',
+      technology: 'e.g. PostgreSQL, MySQL',
       viewLevel: 'cluster',
     },
   },
@@ -260,21 +260,21 @@ export const allNodes: ArchNode[] = [
     type: 'cache',
     position: { x: 2550, y: 440 },
     data: {
-      label: 'Redis Cluster',
+      label: 'Distributed Cache',
       description: 'Distributed Cache — кэширование + Rate Limit counters',
-      technology: 'Redis Cluster',
+      technology: 'e.g. Redis, Memcached',
       viewLevel: 'cluster',
     },
   },
-  // EU Kafka + Schema Registry + DLQ
+  // EU Event Bus + Schema Registry + DLQ
   {
     id: 'dc-eu-kafka',
     type: 'messageQueue',
     position: { x: 2800, y: 90 },
     data: {
-      label: 'Kafka Cluster',
-      description: 'Event Bus — domain topics: orders.*, payments.*, inventory.*',
-      technology: 'Apache Kafka (3 brokers)',
+      label: 'Event Bus',
+      description: 'Event Streaming — domain topics: orders.*, payments.*, inventory.*',
+      technology: 'e.g. Kafka, Wormhole',
       viewLevel: 'cluster',
     },
   },
@@ -284,8 +284,8 @@ export const allNodes: ArchNode[] = [
     position: { x: 3050, y: 90 },
     data: {
       label: 'Schema Registry',
-      description: 'Avro/Protobuf schema validation — контракты событий',
-      technology: 'Confluent Schema Registry',
+      description: 'Schema Validation — контракты событий (Avro/Protobuf)',
+      technology: 'e.g. Schema Registry',
       viewLevel: 'cluster',
     },
   },
@@ -296,7 +296,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Dead Letter Queue',
       description: 'DLQ topics: *.dlq — failed messages после 3 retry',
-      technology: 'Kafka DLQ Topics',
+      technology: 'DLQ Topics',
       viewLevel: 'cluster',
     },
   },
@@ -308,7 +308,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Rate Limiter',
       description: 'Distributed Rate Limiting — защита от перегрузки',
-      technology: 'Redis + Token Bucket',
+      technology: 'Token Bucket / Sliding Window',
       viewLevel: 'datacenter',
     },
   },
@@ -318,9 +318,9 @@ export const allNodes: ArchNode[] = [
     type: 'service',
     position: { x: 2800, y: -120 },
     data: {
-      label: 'Prometheus',
+      label: 'Metrics Collector',
       description: 'Metrics Collection — сбор метрик со всех сервисов',
-      technology: 'Prometheus + VictoriaMetrics',
+      technology: 'e.g. Prometheus, Monarch',
       viewLevel: 'cluster',
     },
   },
@@ -329,21 +329,21 @@ export const allNodes: ArchNode[] = [
     type: 'service',
     position: { x: 2800, y: 370 },
     data: {
-      label: 'Jaeger',
-      description: 'Distributed Tracing — отслеживание запросов',
-      technology: 'Jaeger / Zipkin',
+      label: 'Distributed Tracing',
+      description: 'Distributed Tracing — отслеживание запросов через систему',
+      technology: 'e.g. Jaeger, Dapper',
       viewLevel: 'cluster',
     },
   },
-  // Istio Control Plane
+  // Service Mesh Control Plane
   {
     id: 'dc-eu-istiod',
     type: 'service',
     position: { x: 1750, y: 180 },
     data: {
-      label: 'Istiod',
-      description: 'Service Mesh Control Plane — управление Envoy sidecar',
-      technology: 'Istio',
+      label: 'Mesh Control Plane',
+      description: 'Service Mesh Control Plane — управление sidecar proxies',
+      technology: 'e.g. Istio, Linkerd',
       viewLevel: 'cluster',
     },
   },
@@ -387,8 +387,8 @@ export const allNodes: ArchNode[] = [
     type: 'ingress',
     position: { x: 1750, y: 700 },
     data: {
-      label: 'K8s Ingress',
-      description: 'Ingress Controller — L7 роутинг в Kubernetes',
+      label: 'Ingress Controller',
+      description: 'Ingress Controller — L7 роутинг в кластер оркестрации',
       technology: 'NGINX',
       viewLevel: 'cluster',
     },
@@ -444,7 +444,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Local Cache',
       description: 'Cache-Aside — локальный кэш для снижения latency',
-      technology: 'Redis',
+      technology: 'e.g. Redis, Memcached',
       viewLevel: 'cluster',
     },
   },
@@ -455,7 +455,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Read Replica',
       description: 'Read Replica — только чтение, async replication',
-      technology: 'PostgreSQL',
+      technology: 'e.g. PostgreSQL replica',
       viewLevel: 'cluster',
     },
   },
@@ -510,8 +510,8 @@ export const allNodes: ArchNode[] = [
     type: 'ingress',
     position: { x: 1750, y: 1200 },
     data: {
-      label: 'K8s Ingress',
-      description: 'Ingress Controller — L7 роутинг в Kubernetes',
+      label: 'Ingress Controller',
+      description: 'Ingress Controller — L7 роутинг в кластер оркестрации',
       technology: 'NGINX',
       viewLevel: 'cluster',
     },
@@ -567,7 +567,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Local Cache',
       description: 'Cache-Aside — локальный кэш для снижения latency',
-      technology: 'Redis',
+      technology: 'e.g. Redis, Memcached',
       viewLevel: 'cluster',
     },
   },
@@ -578,7 +578,7 @@ export const allNodes: ArchNode[] = [
     data: {
       label: 'Read Replica',
       description: 'Read Replica — только чтение, async replication',
-      technology: 'PostgreSQL',
+      technology: 'e.g. PostgreSQL replica',
       viewLevel: 'cluster',
     },
   },
@@ -600,9 +600,9 @@ export const allNodes: ArchNode[] = [
     type: 'messageQueue',
     position: { x: 3050, y: 700 },
     data: {
-      label: 'Cross-DC Kafka',
+      label: 'Cross-DC Event Bus',
       description: 'Event Replication — репликация событий между регионами',
-      technology: 'MirrorMaker 2',
+      technology: 'e.g. MirrorMaker, Wormhole',
       viewLevel: 'global',
     },
   },

@@ -128,31 +128,31 @@ export const nodeDescriptions: Record<NodeType, NodeDescription> = {
     keyFeatures: [
       'Token bucket / Sliding window алгоритмы',
       'Per-user и per-IP лимиты',
-      'Distributed rate limiting (Redis)',
+      'Distributed rate limiting',
       'Graceful degradation',
     ],
     whyNeeded: 'Защищает систему от abuse и DDoS. Обеспечивает fair usage — один клиент не может забрать все ресурсы.',
-    realWorldExample: 'Twitter API: 300 requests/15 min для timeline, GitHub API: 5000 req/hour',
-    technologies: ['Redis + Lua scripts', 'Envoy rate limiting', 'Kong rate limiting plugin'],
+    realWorldExample: 'Twitter API: 300 requests/15 min для timeline, GitHub API: 5000 req/hour. Все BigTech имеют свои решения',
+    technologies: ['Custom solutions', 'Envoy rate limiting', 'Kong plugin', 'Redis + Lua'],
   },
 
-  k8sCluster: {
-    title: 'Kubernetes Cluster',
+  containerOrchestration: {
+    title: 'Container Orchestration',
     purpose: 'Оркестрация контейнеров и управление workloads',
     keyFeatures: [
-      'Автоматический scheduling подов',
-      'Self-healing (restart failed pods)',
+      'Автоматический scheduling контейнеров',
+      'Self-healing (restart failed containers)',
       'Horizontal autoscaling',
       'Rolling deployments',
     ],
-    whyNeeded: 'Абстрагирует управление контейнерами. Декларативно описываем желаемое состояние, K8s обеспечивает его поддержание.',
-    realWorldExample: 'Spotify запускает 2000+ микросервисов в K8s, Airbnb мигрировал 1000+ сервисов',
-    technologies: ['Kubernetes', 'EKS', 'GKE', 'AKS', 'OpenShift'],
+    whyNeeded: 'Абстрагирует управление контейнерами. Декларативно описываем желаемое состояние, оркестратор обеспечивает его поддержание.',
+    realWorldExample: 'Google использует Borg для миллионов контейнеров, Meta — Twine. Как OSS альтернатива — Kubernetes (Spotify 2000+ сервисов)',
+    technologies: ['Borg (Google)', 'Twine (Meta)', 'Kubernetes', 'Mesos', 'Nomad'],
   },
 
   ingress: {
     title: 'Ingress Controller',
-    purpose: 'HTTP routing внутри Kubernetes кластера',
+    purpose: 'HTTP routing внутри кластера оркестрации',
     keyFeatures: [
       'Path-based и host-based routing',
       'TLS termination',
@@ -160,62 +160,62 @@ export const nodeDescriptions: Record<NodeType, NodeDescription> = {
       'Canary deployments',
     ],
     whyNeeded: 'Единая точка входа в кластер. Маршрутизирует внешний трафик к нужным сервисам по правилам.',
-    realWorldExample: 'Nginx Ingress направляет api.example.com/v1/* на v1 сервис, /v2/* на v2',
-    technologies: ['Nginx Ingress', 'Traefik', 'Istio Gateway', 'AWS ALB Ingress'],
+    realWorldExample: 'Google использует GFE (Google Front End), как OSS — Nginx Ingress направляет api.example.com/v1/* на v1 сервис',
+    technologies: ['GFE (Google)', 'Nginx Ingress', 'Traefik', 'Envoy', 'HAProxy'],
   },
 
   service: {
-    title: 'Kubernetes Service',
-    purpose: 'Абстракция для доступа к группе подов',
+    title: 'Service Discovery',
+    purpose: 'Абстракция для доступа к группе инстансов сервиса',
     keyFeatures: [
       'Stable DNS name и IP',
-      'Load balancing между подами',
+      'Load balancing между инстансами',
       'Service discovery',
-      'Port mapping',
+      'Health checking',
     ],
-    whyNeeded: 'Поды эфемерны — их IP меняются. Service предоставляет стабильный endpoint для обращения к группе подов.',
-    realWorldExample: 'order-service.default.svc.cluster.local всегда резолвится к здоровым подам Order Service',
-    technologies: ['ClusterIP', 'NodePort', 'LoadBalancer', 'Headless Service'],
+    whyNeeded: 'Инстансы эфемерны — их IP меняются. Service discovery предоставляет стабильный endpoint для обращения к группе инстансов.',
+    realWorldExample: 'Google использует BNS (Borg Naming Service), Meta — SMC. OSS: Consul, etcd, Kubernetes Services',
+    technologies: ['BNS (Google)', 'SMC (Meta)', 'Consul', 'etcd', 'ZooKeeper'],
   },
 
   pod: {
-    title: 'Pod (with Envoy Sidecar)',
-    purpose: 'Минимальная единица деплоя в Kubernetes с service mesh proxy',
+    title: 'Pod (with Sidecar)',
+    purpose: 'Минимальная единица деплоя с service mesh proxy',
     keyFeatures: [
-      'Один или несколько контейнеров',
+      'Один или несколько контейнеров/процессов',
       'Shared network namespace',
-      'Envoy sidecar для mesh функций',
+      'Sidecar proxy для mesh функций',
       'Lifecycle hooks',
     ],
-    whyNeeded: 'Pod группирует контейнеры, которые должны работать вместе. Envoy sidecar добавляет observability, security и traffic management без изменения кода приложения.',
-    realWorldExample: 'Pod с Python app + Envoy sidecar + log collector контейнером',
-    technologies: ['Docker', 'containerd', 'Envoy', 'Istio proxy'],
+    whyNeeded: 'Pod группирует процессы, которые должны работать вместе. Sidecar proxy добавляет observability, security и traffic management без изменения кода приложения.',
+    realWorldExample: 'Pod с Python app + Sidecar proxy + log collector',
+    technologies: ['Docker', 'containerd', 'Borg (Google)', 'Twine (Meta)'],
   },
 
   sidecar: {
-    title: 'Envoy Sidecar Proxy',
+    title: 'Sidecar Proxy',
     purpose: 'Прозрачный proxy для service mesh функциональности',
     keyFeatures: [
       'mTLS между сервисами (zero-trust security)',
       'Automatic retry и circuit breaking',
       'Distributed tracing (spans)',
-      'Metrics export (Prometheus)',
+      'Metrics export',
       'Load balancing (round-robin, least-conn)',
       'Traffic mirroring и canary routing',
     ],
-    whyNeeded: `Envoy решает проблемы распределённых систем БЕЗ изменения кода приложений:
+    whyNeeded: `Sidecar proxy решает проблемы распределённых систем БЕЗ изменения кода приложений:
 
-• SECURITY: mTLS шифрует весь трафик между сервисами. Без Envoy каждый сервис должен сам реализовывать TLS.
+• SECURITY: mTLS шифрует весь трафик между сервисами. Без sidecar каждый сервис должен сам реализовывать TLS.
 
-• OBSERVABILITY: Envoy автоматически собирает метрики (latency, error rate, RPS) и трейсы. Приложению не нужно инструментировать каждый вызов.
+• OBSERVABILITY: Proxy автоматически собирает метрики (latency, error rate, RPS) и трейсы. Приложению не нужно инструментировать каждый вызов.
 
-• RESILIENCE: Circuit breaker, retry, timeout — Envoy реализует паттерны отказоустойчивости. При 50% ошибок он прекращает отправку запросов, давая сервису восстановиться.
+• RESILIENCE: Circuit breaker, retry, timeout — proxy реализует паттерны отказоустойчивости. При 50% ошибок он прекращает отправку запросов, давая сервису восстановиться.
 
 • TRAFFIC MANAGEMENT: Canary deployments, A/B testing, traffic mirroring — всё через конфигурацию, без кода.
 
-Без Envoy каждая команда реализовывала бы эти функции по-своему, с багами и inconsistency.`,
-    realWorldExample: 'Lyft (создатели Envoy) используют его для 10,000+ сервисов. Uber, Airbnb, eBay — все используют Envoy в production.',
-    technologies: ['Envoy Proxy', 'Istio', 'Linkerd', 'Consul Connect'],
+Без sidecar каждая команда реализовывала бы эти функции по-своему, с багами и inconsistency.`,
+    realWorldExample: 'Google и Meta используют собственные mesh-решения. OSS: Envoy (Lyft) используется в Uber, Airbnb, eBay',
+    technologies: ['Custom (Google/Meta)', 'Envoy', 'Linkerd', 'Consul Connect'],
   },
 
   cache: {
@@ -228,8 +228,8 @@ export const nodeDescriptions: Record<NodeType, NodeDescription> = {
       'Clustering и replication',
     ],
     whyNeeded: 'БД медленная (миллисекунды), кэш быстрый (микросекунды). Кэширование снижает нагрузку на БД и уменьшает latency для hot data.',
-    realWorldExample: 'Twitter кэширует timeline в Redis — 300M+ пользователей не могут каждый раз ходить в БД',
-    technologies: ['Redis', 'Memcached', 'Hazelcast', 'Apache Ignite'],
+    realWorldExample: 'Meta использует TAO для кэширования графа, Netflix — EVCache. OSS: Redis, Memcached',
+    technologies: ['TAO (Meta)', 'EVCache (Netflix)', 'Redis', 'Memcached', 'Hazelcast'],
   },
 
   database: {
@@ -242,12 +242,12 @@ export const nodeDescriptions: Record<NodeType, NodeDescription> = {
       'Backup и point-in-time recovery',
     ],
     whyNeeded: 'Source of truth для данных. Кэш может потеряться, но данные в БД сохраняются. Обеспечивает консистентность и durability.',
-    realWorldExample: 'Instagram использует PostgreSQL с sharding по user_id для 2B+ пользователей',
-    technologies: ['PostgreSQL', 'MySQL', 'MongoDB', 'CockroachDB', 'Cassandra'],
+    realWorldExample: 'Google использует Spanner, Meta — MyRocks/MySQL. OSS: PostgreSQL с sharding (Instagram 2B+ users)',
+    technologies: ['Spanner (Google)', 'MyRocks (Meta)', 'PostgreSQL', 'MySQL', 'CockroachDB'],
   },
 
   messageQueue: {
-    title: 'Message Queue / Event Bus',
+    title: 'Event Bus / Message Queue',
     purpose: 'Асинхронная коммуникация между сервисами',
     keyFeatures: [
       'Decoupling producers и consumers',
@@ -255,8 +255,8 @@ export const nodeDescriptions: Record<NodeType, NodeDescription> = {
       'Event sourcing support',
       'Horizontal scaling consumers',
     ],
-    whyNeeded: 'Синхронные вызовы создают coupling и каскадные отказы. Queue позволяет сервисам общаться асинхронно, обеспечивая resilience и масштабируемость.',
-    realWorldExample: 'LinkedIn использует Kafka для 7+ триллионов сообщений в день между сервисами',
-    technologies: ['Apache Kafka', 'RabbitMQ', 'AWS SQS', 'Google Pub/Sub', 'NATS'],
+    whyNeeded: 'Синхронные вызовы создают coupling и каскадные отказы. Event Bus позволяет сервисам общаться асинхронно, обеспечивая resilience и масштабируемость.',
+    realWorldExample: 'Meta использует Wormhole, LinkedIn — Kafka (7+ трлн сообщений/день), Google — Pub/Sub',
+    technologies: ['Wormhole (Meta)', 'Kafka', 'Google Pub/Sub', 'AWS SQS', 'NATS'],
   },
 }

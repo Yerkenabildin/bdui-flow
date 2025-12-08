@@ -5,7 +5,7 @@ import { Container } from 'lucide-react'
 import { NodeData } from '../../../types'
 import { useAnimationStore } from '../../../stores/animationStore'
 
-export const K8sClusterNode = memo(({ id, data }: NodeProps<NodeData>) => {
+export const ContainerOrchestrationNode = memo(({ id, data }: NodeProps<NodeData>) => {
   const activeNodeIds = useAnimationStore((s) => s.activeNodeIds)
   const isActive = activeNodeIds.includes(id)
 
@@ -62,4 +62,4 @@ export const K8sClusterNode = memo(({ id, data }: NodeProps<NodeData>) => {
   )
 })
 
-K8sClusterNode.displayName = 'K8sClusterNode'
+ContainerOrchestrationNode.displayName = 'ContainerOrchestrationNode'
