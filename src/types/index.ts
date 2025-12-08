@@ -12,6 +12,7 @@ export type NodeType =
   | 'securityLayer'
   | 'containerOrchestration'
   | 'ingress'
+  | 'serviceGroup'
   | 'service'
   | 'pod'
   | 'sidecar'
@@ -30,6 +31,8 @@ export interface NodeData {
   viewLevel: ViewLevel
   parentId?: string
   dcId?: string
+  width?: number
+  height?: number
 }
 
 export type ArchNode = Node<NodeData>

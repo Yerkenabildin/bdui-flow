@@ -8,6 +8,7 @@ import { ApiGatewayNode } from './ApiGatewayNode'
 import { AuthServiceNode } from './AuthServiceNode'
 import { SecurityLayerNode } from './SecurityLayerNode'
 import { ContainerOrchestrationNode } from './ContainerOrchestrationNode'
+import { ServiceGroupNode } from './ServiceGroupNode'
 import { ServiceNode, IngressNode } from './ServiceNode'
 import { PodNode } from './PodNode'
 import { SidecarNode } from './SidecarNode'
@@ -26,6 +27,7 @@ export const nodeTypes: NodeTypes = {
   authService: AuthServiceNode,
   securityLayer: SecurityLayerNode,
   containerOrchestration: ContainerOrchestrationNode,
+  serviceGroup: ServiceGroupNode,
   service: ServiceNode,
   ingress: IngressNode,
   pod: PodNode,

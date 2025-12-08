@@ -166,6 +166,20 @@ export const nodeDescriptions: Record<NodeType, NodeDescription> = {
     technologies: ['GFE (Google)', 'Nginx Ingress', 'Traefik', 'Envoy', 'HAProxy'],
   },
 
+  serviceGroup: {
+    title: 'Microservice',
+    purpose: 'Логическая единица бизнес-функциональности с группой Pod-реплик',
+    keyFeatures: [
+      'Группа Pod-реплик для масштабирования',
+      'Service Discovery для маршрутизации',
+      'Изолированная база данных (Database per Service)',
+      'Независимый deployment lifecycle',
+    ],
+    whyNeeded: 'Микросервис — это логическая граница ответственности. Включает несколько Pod-реплик для отказоустойчивости и масштабирования. Каждый сервис владеет своими данными.',
+    realWorldExample: 'Order Service в Uber обрабатывает заказы, Payment Service — платежи. Каждый масштабируется независимо.',
+    technologies: ['Kubernetes Deployment', 'Borg Job (Google)', 'Twine (Meta)', 'Docker Swarm'],
+  },
+
   service: {
     title: 'Service Discovery',
     purpose: 'Абстракция для доступа к группе инстансов сервиса',
