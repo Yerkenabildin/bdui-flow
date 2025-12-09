@@ -50,9 +50,11 @@ Regional LB → Security Layer (WAF + Rate Limiter)
 - **Token Bucket / Sliding Window** — алгоритмы ограничения запросов
 - **Graceful Degradation** — при высокой нагрузке лимиты ужесточаются
 
-**Лимиты (адаптивные):**
-- Обычный пользователь: 100 req/min (базовый), снижается при перегрузке
-- Premium: 500 req/min
+**Лимиты (адаптивные, условные значения):**
+- Обычный пользователь: ~100 req/min (базовый), снижается при перегрузке
+- Premium: ~1000 req/min
+
+*Реальные лимиты зависят от типа endpoint и бизнес-логики.*
 
 ### Фаза 4: Kubernetes Cluster
 
@@ -114,11 +116,12 @@ EU DC → Kafka (Cross-DC) → US DC, Asia DC
 | Redis | Session, Cache, Rate Limit | Redis Cluster |
 | PostgreSQL | Primary Database | CockroachDB, Spanner |
 
-## Метрики успеха
+## Метрики успеха (ориентировочные)
 
 - **P99 Latency** < 200ms (для запроса на создание заказа)
 - **Availability** > 99.99%
-- **Throughput** > 10,000 orders/sec
+
+*Примечание: конкретные значения throughput зависят от инфраструктуры и не указаны, т.к. это учебный прототип.*
 
 ## Связанные паттерны
 

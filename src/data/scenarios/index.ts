@@ -154,14 +154,15 @@ DMZ (Demilitarized Zone) — буферная зона между интерне
 ЧТО ПРОИСХОДИТ:
 1. WAF проверяет запрос на SQL injection, XSS, OWASP Top 10
 2. Проверяется IP reputation и geo-blocking
-3. Adaptive sliding window: 46/100 req/min → OK
-4. Добавляются headers: X-RateLimit-Remaining: 54
+3. Adaptive sliding window: 460/1000 req/min → OK
+4. Добавляются headers: X-RateLimit-Remaining: 540
 
 ПАТТЕРН: Adaptive Rate Limiting — лимиты меняются в зависимости от нагрузки системы.
-При низкой нагрузке лимиты выше, при высокой — ужесточаются (graceful degradation).`,
+При низкой нагрузке лимиты выше, при высокой — ужесточаются (graceful degradation).
+(Числа условные для демонстрации; реальные лимиты зависят от типа endpoint)`,
         duration: 400,
         realLatency: 1,
-        payload: { userId: 'user_123', endpoint: '/api/v1/orders', currentRate: 46, limit: 100 },
+        payload: { userId: 'user_123', endpoint: '/api/v1/orders', currentRate: 460, limit: 1000 },
       },
       {
         id: 'step-8',
@@ -1275,8 +1276,9 @@ US DC работает как обычно, не знает о проблема�
 3. Роутинг на Internal Router
 
 ⚠️ Если бы это был POST (создание заказа):
-US DC вернул бы 307 Redirect на EU DC
-или 503 "Primary DC unavailable"`,
+US DC вернул бы 503 "Service Unavailable" — записи возможны только в primary DC.
+Причина: избежать конфликтов при асинхронной репликации.
+Альтернатива: active-active с разрешением конфликтов (LWW/CRDT), но это сложнее.`,
         duration: 800,
         realLatency: 2,
         payload: { method: 'GET', canHandle: true },
@@ -1294,7 +1296,9 @@ US DC вернул бы 307 Redirect на EU DC
 2. ClusterIP Service получает запрос
 3. Order Service в US — read-only replica
 
-ПАТТЕРН: Read Replica — только чтение данных.`,
+ПАТТЕРН: Read Replica — только чтение данных.
+ПОЧЕМУ READ-ONLY: При асинхронной репликации записи в обоих ДЦ
+привели бы к конфликтам. Выбор: простота (read-only) vs сложность (active-active + conflict resolution).`,
         duration: 600,
         realLatency: 1,
         payload: { path: '/api/v1/orders/123' },
@@ -1648,20 +1652,20 @@ HAProxy метрики:
 Security Layer (WAF + Rate Limiting) — первая линия защиты!
 
 ADAPTIVE RATE LIMITING для user_456:
-• Базовый лимит POST /orders: 10 req/min
-• Premium users: 100 req/min
+• Базовый лимит POST /orders: 100 req/min (обычный user)
+• Premium users: 1000 req/min
 • При высокой нагрузке системы лимиты снижаются на 30-50%
 
 Token bucket check (adaptive):
 • Current tokens: 0
-• Base limit: 10, adjusted: 7 (система под нагрузкой)
+• Base limit: 100, adjusted: 70 (система под нагрузкой)
 • 0 tokens → ПРЕВЫШЕН!
 
 РЕШЕНИЕ: Отклонить с 429 + Retry-After header.
-В продакшене используются token bucket / leaky bucket с graceful degradation.`,
+(Числа условные — реальные лимиты зависят от бизнес-логики и инфраструктуры)`,
         duration: 400,
         realLatency: 1,
-        payload: { userId: 'user_456', endpoint: 'POST /orders', currentCount: 11, limit: 10 },
+        payload: { userId: 'user_456', endpoint: 'POST /orders', currentCount: 101, limit: 100 },
       },
       {
         id: 'over-8',
@@ -1801,8 +1805,8 @@ X-RateLimit-Remaining: 0
         detailedInfo: `НОВЫЙ КЛИЕНТ: user_789 (Premium)
 
 У premium пользователей лимит выше:
-• POST /orders: 100 req/min
-• Текущий count: 5
+• POST /orders: 1000 req/min (vs 100 для обычных)
+• Текущий count: 50
 • Rate limit: OK ✓
 
 Но сервисы всё ещё перегружены...`,
@@ -1857,12 +1861,12 @@ X-RateLimit-Remaining: 0
         type: 'request',
         title: 'Security Check',
         description: 'Security Layer проверяет лимиты',
-        detailedInfo: `Premium user: лимит 100 req/min
-Текущий count: 6
+        detailedInfo: `Premium user: лимит 1000 req/min
+Текущий count: 51
 WAF: OK ✓ Rate Limit: OK ✓`,
         duration: 400,
         realLatency: 1,
-        payload: { userId: 'user_789', current: 6, limit: 100 },
+        payload: { userId: 'user_789', current: 51, limit: 1000 },
       },
       {
         id: 'over-20',
