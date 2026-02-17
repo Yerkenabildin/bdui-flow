@@ -195,7 +195,6 @@ export const nodes: BduiNode[] = [
 ]
 
 const edgeStyle = { stroke: '#64748b', strokeWidth: 2 }
-const dashedStyle = { stroke: '#94a3b8', strokeWidth: 1.5, strokeDasharray: '6,4' }
 const orangeStyle = { stroke: '#f97316', strokeWidth: 2.5 }
 const orangeMarker = { type: MarkerType.ArrowClosed as const, color: '#f97316', width: 16, height: 16 }
 
