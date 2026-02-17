@@ -60,18 +60,18 @@ export const BaseNode = memo(({ data, icon, color }: BaseNodeProps) => {
         style={{ backgroundColor: color }}
       />
 
-      {/* Bottom handle for vertical connections */}
+      {/* Vertical handles for fan-out connections */}
       <Handle
         type="source"
-        position={Position.Bottom}
-        id="bottom"
+        position={Position.Top}
+        id="top"
         className="!w-2.5 !h-2.5"
         style={{ backgroundColor: color }}
       />
       <Handle
         type="target"
-        position={Position.Top}
-        id="top"
+        position={Position.Bottom}
+        id="bottom"
         className="!w-2.5 !h-2.5"
         style={{ backgroundColor: color }}
       />
