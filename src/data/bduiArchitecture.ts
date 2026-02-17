@@ -71,7 +71,7 @@ export const nodes: BduiNode[] = [
     data: {
       label: 'API Gateway',
       description: 'Аутентификация, rate limiting, маршрутизация к бэкенд-сервисам.',
-      technology: 'Kong / Custom',
+      technology: 'Custom',
       links: [
         { label: 'Мониторинг API Gateway', url: 'https://nda.ya.ru/t/LGaaDerR7UdfFV' },
         { label: 'Тайминги пути после GW', url: 'https://nda.ya.ru/t/v86B_zRB7UdgmB' },
@@ -159,7 +159,7 @@ export const nodes: BduiNode[] = [
     data: {
       label: 'Service A',
       description: 'Бэкенд-сервис, предоставляющий данные для BDUI-компонентов.',
-      technology: 'gRPC',
+      technology: 'HTTP',
     },
   },
   {
@@ -169,7 +169,7 @@ export const nodes: BduiNode[] = [
     data: {
       label: 'Service B',
       description: 'Бэкенд-сервис, предоставляющий данные для BDUI-компонентов.',
-      technology: 'gRPC',
+      technology: 'HTTP',
     },
   },
   {
@@ -179,7 +179,7 @@ export const nodes: BduiNode[] = [
     data: {
       label: 'Service C',
       description: 'Бэкенд-сервис, предоставляющий данные для BDUI-компонентов.',
-      technology: 'gRPC',
+      technology: 'HTTP',
     },
   },
   {
@@ -189,7 +189,7 @@ export const nodes: BduiNode[] = [
     data: {
       label: 'Service D',
       description: 'Бэкенд-сервис, предоставляющий данные для BDUI-компонентов.',
-      technology: 'gRPC',
+      technology: 'HTTP',
     },
   },
 ]
@@ -229,28 +229,6 @@ export const edges: BduiEdge[] = [
     id: 'e-proxy-svc-d', source: 'proxy', target: 'svc-d',
     sourceHandle: 'top', targetHandle: 'bottom',
     style: edgeStyle, markerEnd: defaultMarker,
-  },
-
-  // === Services → Proxy (response, пунктир, вниз) ===
-  {
-    id: 'e-resp-svc-a', source: 'svc-a', target: 'proxy',
-    sourceHandle: 'bottom', targetHandle: 'top',
-    style: dashedStyle, markerEnd: { ...defaultMarker, color: '#94a3b8' },
-  },
-  {
-    id: 'e-resp-svc-b', source: 'svc-b', target: 'proxy',
-    sourceHandle: 'bottom', targetHandle: 'top',
-    style: dashedStyle, markerEnd: { ...defaultMarker, color: '#94a3b8' },
-  },
-  {
-    id: 'e-resp-svc-c', source: 'svc-c', target: 'proxy',
-    sourceHandle: 'bottom', targetHandle: 'top',
-    style: dashedStyle, markerEnd: { ...defaultMarker, color: '#94a3b8' },
-  },
-  {
-    id: 'e-resp-svc-d', source: 'svc-d', target: 'proxy',
-    sourceHandle: 'bottom', targetHandle: 'top',
-    style: dashedStyle, markerEnd: { ...defaultMarker, color: '#94a3b8' },
   },
 
   // === SEQUENTIAL: Proxy → Renderer (после ожидания, оранжевый, в линию) ===

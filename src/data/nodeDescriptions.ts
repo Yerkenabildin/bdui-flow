@@ -42,7 +42,7 @@ export const nodeDescriptions: Record<BduiNodeType, NodeDescription> = {
       'Request/response трансформация',
       'API версионирование',
     ],
-    technologies: ['Kong', 'Custom Gateway'],
+    technologies: ['Custom'],
   },
   proxy: {
     title: 'superapp-bdui-proxy',
@@ -64,7 +64,7 @@ export const nodeDescriptions: Record<BduiNodeType, NodeDescription> = {
       'Nginx на поде как reverse proxy',
       'Независимый деплой и масштабирование',
     ],
-    technologies: ['gRPC', 'Nginx (reverse proxy на поде)'],
+    technologies: ['HTTP', 'Nginx (reverse proxy на поде)'],
   },
   renderer: {
     title: 'go-superapp-bdui',
