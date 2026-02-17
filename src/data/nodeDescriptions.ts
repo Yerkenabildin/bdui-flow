@@ -1,280 +1,80 @@
-import { NodeType } from '../types'
+import { BduiNodeType, NodeDescription } from '../types'
 
-export interface NodeDescription {
-  title: string
-  purpose: string
-  keyFeatures: string[]
-  whyNeeded: string
-  realWorldExample: string
-  technologies: string[]
-}
-
-export const nodeDescriptions: Record<NodeType, NodeDescription> = {
+export const nodeDescriptions: Record<BduiNodeType, NodeDescription> = {
   client: {
-    title: 'Client Application',
-    purpose: 'Точка входа пользователя в систему',
+    title: 'Mobile App',
+    purpose: 'Мобильное приложение пользователя. Отправляет запрос на получение BDUI-экрана.',
     keyFeatures: [
-      'Отправляет HTTP/HTTPS запросы',
-      'Кэширует данные локально',
-      'Обрабатывает ошибки и retry логику',
-      'Отображает UI пользователю',
+      'Отправка HTTP-запроса к бэкенду',
+      'Рендеринг BDUI-ответа в нативный UI',
+      'Кэширование предыдущих ответов',
     ],
-    whyNeeded: 'Клиент — это интерфейс между пользователем и backend. Он абстрагирует сложность распределённой системы, предоставляя простой UI.',
-    realWorldExample: 'iOS/Android приложение Uber, веб-интерфейс Gmail, Slack desktop app',
-    technologies: ['React Native', 'Swift', 'Kotlin', 'Flutter', 'React', 'Vue'],
+    technologies: ['iOS (Swift)', 'Android (Kotlin)'],
   },
-
-  dns: {
-    title: 'DNS (Domain Name System)',
-    purpose: 'Преобразование доменных имён в IP-адреса',
+  l3Balancer: {
+    title: 'L3 Balancer',
+    purpose: 'Балансировка на транспортном уровне (TCP/UDP). Распределяет пакеты по серверам на основе IP-адресов.',
     keyFeatures: [
-      'Иерархическая система резолвинга',
-      'TTL-based кэширование',
-      'GeoDNS для географической маршрутизации',
-      'Health checks для failover',
+      'Работает на уровне TCP/UDP (Layer 3-4)',
+      'ECMP — равномерное распределение по маршрутам',
+      'Не инспектирует содержимое пакетов',
+      'Очень высокая пропускная способность',
     ],
-    whyNeeded: 'Пользователи запоминают домены (google.com), а не IP-адреса. DNS также позволяет балансировать нагрузку на уровне DNS и направлять пользователей к ближайшему дата-центру.',
-    realWorldExample: 'Route 53 направляет европейских пользователей на EU сервера, а американских — на US',
-    technologies: ['AWS Route 53', 'Cloudflare DNS', 'Google Cloud DNS', 'BIND'],
+    technologies: ['ECMP', 'IPVS', 'Maglev'],
   },
-
-  cdn: {
-    title: 'CDN (Content Delivery Network)',
-    purpose: 'Кэширование и доставка статического контента с edge-серверов',
+  l7Balancer: {
+    title: 'L7 Balancer',
+    purpose: 'Балансировка на уровне HTTP. Маршрутизирует запросы на основе заголовков, URL, cookies.',
     keyFeatures: [
-      'Edge-серверы по всему миру',
-      'Кэширование статики (JS, CSS, images)',
-      'DDoS защита',
-      'TLS termination на edge',
+      'Маршрутизация по HTTP-заголовкам и путям',
+      'TLS termination',
+      'Health checks бэкендов',
+      'Retry и circuit breaking',
     ],
-    whyNeeded: 'Снижает latency доставки контента — пользователь получает данные с ближайшего сервера, а не из основного дата-центра. Также разгружает origin серверы.',
-    realWorldExample: 'Netflix использует свою CDN (Open Connect) для стриминга видео с серверов у провайдеров',
-    technologies: ['Cloudflare', 'Akamai', 'AWS CloudFront', 'Fastly'],
+    technologies: ['AWACS'],
   },
-
-  globalLb: {
-    title: 'Global Load Balancer',
-    purpose: 'Распределение трафика между дата-центрами',
-    keyFeatures: [
-      'Geo-based routing',
-      'Health monitoring дата-центров',
-      'Failover при отказе региона',
-      'Latency-based routing',
-    ],
-    whyNeeded: 'Направляет пользователей к оптимальному дата-центру по географии или latency. При отказе одного региона переключает трафик на другой.',
-    realWorldExample: 'Google Global Load Balancer направляет запрос к ближайшему дата-центру с учётом загрузки',
-    technologies: ['AWS Global Accelerator', 'Google Cloud GLB', 'Azure Traffic Manager'],
-  },
-
-  datacenter: {
-    title: 'Data Center',
-    purpose: 'Физическая инфраструктура для размещения серверов',
-    keyFeatures: [
-      'Redundant power и cooling',
-      'Физическая безопасность',
-      'Сетевая связность с другими DC',
-      'Compliance (SOC2, GDPR locality)',
-    ],
-    whyNeeded: 'Обеспечивает физическую основу для всей инфраструктуры. Multi-region deployment нужен для disaster recovery и низкой latency в разных регионах.',
-    realWorldExample: 'AWS имеет 30+ регионов, каждый с несколькими Availability Zones',
-    technologies: ['AWS Regions', 'Google Cloud Regions', 'Azure Regions', 'Colocation'],
-  },
-
-  regionalLb: {
-    title: 'Regional Load Balancer',
-    purpose: 'Балансировка нагрузки внутри дата-центра',
-    keyFeatures: [
-      'L4 (TCP/UDP) и L7 (HTTP) балансировка',
-      'Health checks backend серверов',
-      'Connection draining',
-      'Rate limiting на входе',
-    ],
-    whyNeeded: 'Распределяет входящий трафик между серверами, обеспечивает отказоустойчивость — при падении сервера трафик перенаправляется на здоровые.',
-    realWorldExample: 'HAProxy перед кластером API серверов, AWS ALB перед ECS сервисами',
-    technologies: ['HAProxy', 'Nginx', 'AWS ALB/NLB', 'Envoy', 'Traefik'],
-  },
-
   apiGateway: {
     title: 'API Gateway',
-    purpose: 'Единая точка входа для всех API запросов',
+    purpose: 'Единая точка входа для API. Аутентификация, авторизация, rate limiting, маршрутизация к внутренним сервисам.',
     keyFeatures: [
-      'Request routing по path/header',
-      'Authentication и Authorization',
-      'Request/Response transformation',
-      'API versioning',
+      'Аутентификация и авторизация',
+      'Rate limiting и throttling',
+      'Request/response трансформация',
+      'API версионирование',
     ],
-    whyNeeded: 'Централизует cross-cutting concerns: auth, logging, rate limiting. Клиенту не нужно знать о внутренней структуре микросервисов.',
-    realWorldExample: 'Kong Gateway маршрутизирует /users/* на User Service, /orders/* на Order Service',
-    technologies: ['Kong', 'AWS API Gateway', 'Apigee', 'Tyk', 'KrakenD'],
+    technologies: ['Kong', 'Custom Gateway'],
   },
-
-  authService: {
-    title: 'Auth Service',
-    purpose: 'Аутентификация и авторизация пользователей',
+  proxy: {
+    title: 'superapp-bdui-proxy',
+    purpose: 'Прокси-сервис BDUI. Параллельно запрашивает данные у бэкенд-сервисов, агрегирует ответы, затем отправляет в рендерер go-superapp-bdui.',
     keyFeatures: [
-      'JWT/OAuth2 token выдача и валидация',
-      'Session management',
-      'RBAC/ABAC authorization',
-      'SSO интеграция',
+      'Fan-out: параллельные запросы к сервисам',
+      'Агрегация ответов от всех сервисов',
+      'Ожидание всех ответов перед отправкой в рендерер',
+      'Таймауты и fallback-логика',
     ],
-    whyNeeded: 'Централизованный сервис безопасности. Все сервисы делегируют проверку токенов ему, не дублируя логику аутентификации.',
-    realWorldExample: 'Okta/Auth0 как managed auth service, или собственный сервис с Redis для сессий',
-    technologies: ['OAuth2', 'OpenID Connect', 'JWT', 'Keycloak', 'Auth0'],
+    technologies: ['C++'],
   },
-
-  securityLayer: {
-    title: 'Security Layer (WAF + Rate Limiter)',
-    purpose: 'Защита от атак и ограничение количества запросов',
-    keyFeatures: [
-      'WAF — фильтрация SQL injection, XSS, OWASP Top 10',
-      'Rate Limiting — Token bucket / Sliding window',
-      'Per-user, per-IP и per-endpoint лимиты',
-      'Geo-blocking и IP reputation',
-      'Bot detection и CAPTCHA интеграция',
-      'DDoS mitigation',
-    ],
-    whyNeeded: 'Централизованный слой безопасности защищает от вредоносных запросов (WAF) и перегрузки (Rate Limiting). Используются адаптивные алгоритмы: при низкой нагрузке лимиты выше, при высокой — ужесточаются (graceful degradation). Подозрительный трафик получает более жёсткие лимиты.',
-    realWorldExample: 'Cloudflare WAF + Rate Limiting, AWS WAF + Shield, Google Cloud Armor. BigTech компании используют собственные решения с ML для детекции аномалий',
-    technologies: ['Custom solutions (Google, Meta)', 'Cloudflare', 'AWS WAF', 'ModSecurity', 'Envoy + Lua'],
-  },
-
-  containerOrchestration: {
-    title: 'Container Orchestration',
-    purpose: 'Оркестрация контейнеров и управление workloads',
-    keyFeatures: [
-      'Автоматический scheduling контейнеров',
-      'Self-healing (restart failed containers)',
-      'Horizontal autoscaling',
-      'Rolling deployments',
-    ],
-    whyNeeded: 'Абстрагирует управление контейнерами. Декларативно описываем желаемое состояние, оркестратор обеспечивает его поддержание.',
-    realWorldExample: 'Google использует Borg для миллионов контейнеров, Meta — Twine. Как OSS альтернатива — Kubernetes (Spotify 2000+ сервисов)',
-    technologies: ['Borg (Google)', 'Twine (Meta)', 'Kubernetes', 'Mesos', 'Nomad'],
-  },
-
-  ingress: {
-    title: 'Internal L7 Router',
-    purpose: 'HTTP маршрутизация к сервисам внутри кластера',
-    keyFeatures: [
-      'Path-based и host-based routing',
-      'TLS termination',
-      'Load balancing к сервисам',
-      'Canary deployments и traffic splitting',
-    ],
-    whyNeeded: 'Единая точка входа в кластер. Маршрутизирует трафик от API Gateway к нужным микросервисам по URL path и headers.',
-    realWorldExample: 'Google использует GFE (Google Front End), Meta — свои L7 роутеры. OSS: Envoy, NGINX, Traefik',
-    technologies: ['GFE (Google)', 'Custom (Meta)', 'Envoy', 'NGINX', 'Traefik'],
-  },
-
-  serviceGroup: {
-    title: 'Microservice',
-    purpose: 'Логическая единица бизнес-функциональности с группой Pod-реплик',
-    keyFeatures: [
-      'Группа Pod-реплик для масштабирования',
-      'Service Discovery для маршрутизации',
-      'Изолированная база данных (Database per Service)',
-      'Независимый deployment lifecycle',
-    ],
-    whyNeeded: 'Микросервис — это логическая граница ответственности. Включает несколько Pod-реплик для отказоустойчивости и масштабирования. Каждый сервис владеет своими данными.',
-    realWorldExample: 'Order Service в Uber обрабатывает заказы, Payment Service — платежи. Каждый масштабируется независимо.',
-    technologies: ['Kubernetes Deployment', 'Borg Job (Google)', 'Twine (Meta)', 'Docker Swarm'],
-  },
-
   service: {
-    title: 'Service Discovery',
-    purpose: 'Абстракция для доступа к группе инстансов сервиса',
+    title: 'Backend Service',
+    purpose: 'Бэкенд-сервис, предоставляющий данные для формирования BDUI-компонентов. Каждый сервис отвечает за свою доменную область.',
     keyFeatures: [
-      'Stable DNS name и IP',
-      'Load balancing между инстансами',
-      'Service discovery',
-      'Health checking',
+      'Доменная логика',
+      'Формирование данных для BDUI-виджетов',
+      'Nginx на поде как reverse proxy',
+      'Независимый деплой и масштабирование',
     ],
-    whyNeeded: 'Инстансы эфемерны — их IP меняются. Service discovery предоставляет стабильный endpoint для обращения к группе инстансов.',
-    realWorldExample: 'Google использует BNS (Borg Naming Service), Meta — SMC. OSS: Consul, etcd, Kubernetes Services',
-    technologies: ['BNS (Google)', 'SMC (Meta)', 'Consul', 'etcd', 'ZooKeeper'],
+    technologies: ['gRPC', 'Nginx (reverse proxy на поде)'],
   },
-
-  pod: {
-    title: 'Pod (with Sidecar)',
-    purpose: 'Минимальная единица деплоя с service mesh proxy',
+  renderer: {
+    title: 'go-superapp-bdui',
+    purpose: 'Рендерер BDUI. Получает агрегированные данные от proxy и формирует финальный BDUI-ответ (layout + данные) для мобильного приложения. Использует библиотеку Tovarisch и верстку на DivKit DSL.',
     keyFeatures: [
-      'Один или несколько контейнеров/процессов',
-      'Shared network namespace',
-      'Sidecar proxy для mesh функций',
-      'Lifecycle hooks',
+      'Сборка BDUI-layout из данных сервисов',
+      'Верстка на DivKit DSL',
+      'Библиотека Tovarisch для компонентов',
+      'Оптимизация ответа для мобильных клиентов',
     ],
-    whyNeeded: 'Pod группирует процессы, которые должны работать вместе. Sidecar proxy добавляет observability, security и traffic management без изменения кода приложения.',
-    realWorldExample: 'Pod с Python app + Sidecar proxy + log collector',
-    technologies: ['Docker', 'containerd', 'Borg (Google)', 'Twine (Meta)'],
-  },
-
-  sidecar: {
-    title: 'Sidecar Proxy',
-    purpose: 'Прозрачный proxy для service mesh функциональности',
-    keyFeatures: [
-      'mTLS между сервисами (zero-trust security)',
-      'Automatic retry и circuit breaking',
-      'Distributed tracing (spans)',
-      'Metrics export',
-      'Load balancing (round-robin, least-conn)',
-      'Traffic mirroring и canary routing',
-    ],
-    whyNeeded: `Sidecar proxy решает проблемы распределённых систем БЕЗ изменения кода приложений:
-
-• SECURITY: mTLS шифрует весь трафик между сервисами. Без sidecar каждый сервис должен сам реализовывать TLS.
-
-• OBSERVABILITY: Proxy автоматически собирает метрики (latency, error rate, RPS) и трейсы. Приложению не нужно инструментировать каждый вызов.
-
-• RESILIENCE: Circuit breaker, retry, timeout — proxy реализует паттерны отказоустойчивости. При 50% ошибок он прекращает отправку запросов, давая сервису восстановиться.
-
-• TRAFFIC MANAGEMENT: Canary deployments, A/B testing, traffic mirroring — всё через конфигурацию, без кода.
-
-Без sidecar каждая команда реализовывала бы эти функции по-своему, с багами и inconsistency.`,
-    realWorldExample: 'Google и Meta используют собственные mesh-решения. OSS: Envoy (Lyft) используется в Uber, Airbnb, eBay',
-    technologies: ['Custom (Google/Meta)', 'Envoy', 'Linkerd', 'Consul Connect'],
-  },
-
-  cache: {
-    title: 'Distributed Cache',
-    purpose: 'Быстрое хранилище для часто запрашиваемых данных',
-    keyFeatures: [
-      'In-memory storage (микросекунды latency)',
-      'TTL-based expiration',
-      'Cache invalidation strategies',
-      'Clustering и replication',
-    ],
-    whyNeeded: 'БД медленная (миллисекунды), кэш быстрый (микросекунды). Кэширование снижает нагрузку на БД и уменьшает latency для hot data.',
-    realWorldExample: 'Meta использует TAO для кэширования графа, Netflix — EVCache. OSS: Redis, Memcached',
-    technologies: ['TAO (Meta)', 'EVCache (Netflix)', 'Redis', 'Memcached', 'Hazelcast'],
-  },
-
-  database: {
-    title: 'Database',
-    purpose: 'Персистентное хранение данных',
-    keyFeatures: [
-      'ACID транзакции',
-      'Replication для отказоустойчивости',
-      'Sharding для масштабирования',
-      'Raft/Paxos для leader election в кластере',
-      'Backup и point-in-time recovery',
-    ],
-    whyNeeded: 'Source of truth для данных. Кэш может потеряться, но данные в БД сохраняются. Обеспечивает консистентность и durability. Для предотвращения split-brain используются consensus-алгоритмы (Raft, Paxos).',
-    realWorldExample: 'Google использует Spanner (Paxos + TrueTime), Meta — MyRocks/MySQL. OSS: PostgreSQL, CockroachDB (Raft)',
-    technologies: ['Spanner (Google)', 'MyRocks (Meta)', 'PostgreSQL', 'MySQL', 'CockroachDB'],
-  },
-
-  messageQueue: {
-    title: 'Event Bus / Message Queue',
-    purpose: 'Асинхронная коммуникация между сервисами',
-    keyFeatures: [
-      'Decoupling producers и consumers',
-      'Guaranteed delivery',
-      'Event sourcing support',
-      'Horizontal scaling consumers',
-      'Raft для leader election (Kafka KRaft)',
-    ],
-    whyNeeded: 'Синхронные вызовы создают coupling и каскадные отказы. Event Bus позволяет сервисам общаться асинхронно, обеспечивая resilience и масштабируемость. Kafka использует Raft (KRaft) для координации без ZooKeeper.',
-    realWorldExample: 'Meta использует Wormhole, LinkedIn — Kafka (7+ трлн сообщений/день), Google — Pub/Sub',
-    technologies: ['Wormhole (Meta)', 'Kafka', 'Google Pub/Sub', 'AWS SQS', 'NATS'],
+    technologies: ['Kotlin', 'Tovarisch', 'DivKit DSL'],
   },
 }

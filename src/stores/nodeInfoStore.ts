@@ -1,10 +1,10 @@
 import { create } from 'zustand'
-import { NodeType, NodeData } from '../types'
+import { BduiNodeType, BduiNodeData } from '../types'
 
 interface SelectedNode {
   id: string
-  type: NodeType
-  data: NodeData
+  type: BduiNodeType
+  data: BduiNodeData
 }
 
 interface NodeInfoStore {
@@ -15,8 +15,6 @@ interface NodeInfoStore {
 
 export const useNodeInfoStore = create<NodeInfoStore>((set) => ({
   selectedNode: null,
-
   selectNode: (node) => set({ selectedNode: node }),
-
   clearSelection: () => set({ selectedNode: null }),
 }))

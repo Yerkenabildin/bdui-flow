@@ -1,81 +1,32 @@
 import { Node, Edge } from 'reactflow'
 
-export type NodeType =
+export type BduiNodeType =
   | 'client'
-  | 'dns'
-  | 'cdn'
-  | 'globalLb'
-  | 'datacenter'
-  | 'regionalLb'
+  | 'l3Balancer'
+  | 'l7Balancer'
   | 'apiGateway'
-  | 'authService'
-  | 'securityLayer'
-  | 'containerOrchestration'
-  | 'ingress'
-  | 'serviceGroup'
+  | 'proxy'
   | 'service'
-  | 'pod'
-  | 'sidecar'
-  | 'cache'
-  | 'database'
-  | 'messageQueue'
+  | 'renderer'
 
-export type ViewLevel = 'global' | 'datacenter' | 'cluster'
+export interface MonitoringLink {
+  label: string
+  url: string
+}
 
-export interface NodeData {
+export interface BduiNodeData {
   label: string
   description: string
   technology?: string
-  icon?: string
-  isActive?: boolean
-  viewLevel: ViewLevel
-  parentId?: string
-  dcId?: string
-  width?: number
-  height?: number
+  links?: MonitoringLink[]
 }
 
-export type ArchNode = Node<NodeData>
-export type ArchEdge = Edge
+export type BduiNode = Node<BduiNodeData>
+export type BduiEdge = Edge
 
-export type StepType = 'request' | 'response' | 'async'
-
-export interface Step {
-  id: string
-  fromNode: string
-  toNode: string
-  edgeId: string             // ID edge для анимации
-  reverse?: boolean          // true = анимация в обратном направлении (от target к source)
-  type: StepType
+export interface NodeDescription {
   title: string
-  description: string
-  detailedInfo: string
-  duration: number           // Длительность анимации (ms) - для плавного просмотра
-  realLatency: number        // Реальная латентность операции (ms) - для отображения
-  payload?: Record<string, unknown>
-}
-
-export interface Scenario {
-  id: string
-  name: string
-  description: string
-  steps: Step[]
-  initialViewLevel: ViewLevel
-}
-
-export type PlaybackState = 'idle' | 'playing' | 'paused'
-
-export interface AnimationState {
-  playbackState: PlaybackState
-  currentStepIndex: number
-  speed: number
-  activeEdgeId: string | null
-  activeNodeId: string | null
-  particleProgress: number
-}
-
-export interface NavigationState {
-  viewLevel: ViewLevel
-  focusedDcId: string | null
-  focusedClusterId: string | null
+  purpose: string
+  keyFeatures: string[]
+  technologies: string[]
 }

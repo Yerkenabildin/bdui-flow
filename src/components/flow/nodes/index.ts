@@ -1,38 +1,18 @@
 import { NodeTypes } from 'reactflow'
 import { ClientNode } from './ClientNode'
-import { DNSNode } from './DNSNode'
-import { CDNNode } from './CDNNode'
-import { GlobalLbNode, RegionalLbNode } from './LoadBalancerNode'
-import { DataCenterNode } from './DataCenterNode'
+import { L3BalancerNode } from './L3BalancerNode'
+import { L7BalancerNode } from './L7BalancerNode'
 import { ApiGatewayNode } from './ApiGatewayNode'
-import { AuthServiceNode } from './AuthServiceNode'
-import { SecurityLayerNode } from './SecurityLayerNode'
-import { ContainerOrchestrationNode } from './ContainerOrchestrationNode'
-import { ServiceGroupNode } from './ServiceGroupNode'
-import { ServiceNode, IngressNode } from './ServiceNode'
-import { PodNode } from './PodNode'
-import { SidecarNode } from './SidecarNode'
-import { CacheNode } from './CacheNode'
-import { DatabaseNode } from './DatabaseNode'
-import { MessageQueueNode } from './MessageQueueNode'
+import { ProxyNode } from './ProxyNode'
+import { ServiceNode } from './ServiceNode'
+import { RendererNode } from './RendererNode'
 
 export const nodeTypes: NodeTypes = {
   client: ClientNode,
-  dns: DNSNode,
-  cdn: CDNNode,
-  globalLb: GlobalLbNode,
-  regionalLb: RegionalLbNode,
-  datacenter: DataCenterNode,
+  l3Balancer: L3BalancerNode,
+  l7Balancer: L7BalancerNode,
   apiGateway: ApiGatewayNode,
-  authService: AuthServiceNode,
-  securityLayer: SecurityLayerNode,
-  containerOrchestration: ContainerOrchestrationNode,
-  serviceGroup: ServiceGroupNode,
+  proxy: ProxyNode,
   service: ServiceNode,
-  ingress: IngressNode,
-  pod: PodNode,
-  sidecar: SidecarNode,
-  cache: CacheNode,
-  database: DatabaseNode,
-  messageQueue: MessageQueueNode,
+  renderer: RendererNode,
 }

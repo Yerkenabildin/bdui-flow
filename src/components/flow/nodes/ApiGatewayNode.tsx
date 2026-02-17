@@ -1,18 +1,11 @@
 import { memo } from 'react'
 import { NodeProps } from 'reactflow'
-import { Router } from 'lucide-react'
+import { Shield } from 'lucide-react'
 import { BaseNode } from './BaseNode'
-import { NodeData } from '../../../types'
+import { BduiNodeData } from '../../../types'
 
-export const ApiGatewayNode = memo(({ id, data }: NodeProps<NodeData>) => {
-  return (
-    <BaseNode
-      id={id}
-      data={data}
-      icon={<Router size={20} />}
-      color="#6366F1"
-    />
-  )
-})
+export const ApiGatewayNode = memo(({ id, data }: NodeProps<BduiNodeData>) => (
+  <BaseNode id={id} data={data} icon={<Shield size={18} />} color="#06B6D4" />
+))
 
 ApiGatewayNode.displayName = 'ApiGatewayNode'

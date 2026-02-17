@@ -1,5 +1,5 @@
 {
-  "name": "distributed-system-visualizer",
+  "name": "bdui-architecture-visualizer",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -13,8 +13,7 @@
     "react-dom": "^18.2.0",
     "reactflow": "^11.10.4",
     "zustand": "^4.4.7",
-    "framer-motion": "^10.16.16",
-    "lucide-react": "^0.294.0"
+"lucide-react": "^0.294.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.45",
